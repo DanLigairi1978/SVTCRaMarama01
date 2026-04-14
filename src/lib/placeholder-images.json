@@ -1,0 +1,112 @@
+{
+  "placeholderImages": [
+    {
+      "id": "home-hero",
+      "description": "A woman from SVTC speaking at a podium.",
+      "imageUrl": "/images/home-hero.jpg",
+      "imageHint": "fijian woman leader"
+    },
+    {
+      "id": "project-culture",
+      "description": "A woman displaying a traditional hand-woven masi cloth.",
+      "imageUrl": "/images/project-culture.jpg",
+      "imageHint": "traditional art"
+    },
+    {
+      "id": "project-education",
+      "description": "Women participating in a financial literacy workshop.",
+      "imageUrl": "/images/project-education.jpg",
+      "imageHint": "workshop training"
+    },
+    {
+      "id": "project-economy",
+      "description": "A woman's hands weaving a traditional Fijian mat.",
+      "imageUrl": "/images/project-economy.jpg",
+      "imageHint": "local market"
+    },
+    {
+      "id": "about-hall",
+      "description": "The interior of the Ra Marama Great Hall, showing a large, open space ready for a community gathering.",
+      "imageUrl": "/images/about-hall.jpg",
+      "imageHint": "community hall"
+    },
+    {
+      "id": "about-history",
+      "description": "An old photograph showing the context of the Cakaudrove Women's Resource Centre.",
+      "imageUrl": "/images/about-history.jpg",
+      "imageHint": "historic building fiji"
+    },
+    {
+      "id": "get-involved-community",
+      "description": "A group of women working together on weaving projects.",
+      "imageUrl": "/images/get-involved-community.jpg",
+      "imageHint": "women community"
+    },
+    {
+      "id": "about-header",
+      "description": "Fijian women performing a traditional dance ceremony.",
+      "imageUrl": "/images/about-header.jpg",
+      "imageHint": "fijian women ceremony"
+    },
+    {
+      "id": "involved-header",
+      "description": "A woman participating in a community drill or training session.",
+      "imageUrl": "/images/involved-header.jpg",
+      "imageHint": "woman training"
+    },
+    {
+      "id": "calendar-header",
+      "description": "An abstract motif of dry sunny weather in the tropics in a comic book panel style.",
+      "imageUrl": "/images/calendar-header.jpg",
+      "imageHint": "abstract sunny tropics"
+    },
+    {
+      "id": "work-header",
+      "description": "A group of women stand proudly in front of a traditionally decorated wall.",
+      "imageUrl": "/images/work-header.jpg",
+      "imageHint": "women community"
+    },
+    {
+      "id": "partner-awb",
+      "description": "Logo of Architects Without Borders.",
+      "imageUrl": "/images/partner-awb.png",
+      "imageHint": "logo"
+    },
+    {
+      "id": "partner-avp",
+      "description": "Logo of Australian Volunteers Program.",
+      "imageUrl": "/images/partner-avp.png",
+      "imageHint": "logo"
+    },
+    {
+      "id": "partner-gef",
+      "description": "Logo of Global Environment Facility.",
+      "imageUrl": "/images/partner-gef.png",
+      "imageHint": "logo"
+    },
+    {
+      "id": "partner-undp",
+      "description": "Logo of United Nations Development Programme.",
+      "imageUrl": "/images/partner-undp.png",
+      "imageHint": "logo"
+    },
+    {
+      "id": "partner-sgp",
+      "description": "Logo of The GEF Small Grants Programme.",
+      "imageUrl": "/images/partner-sgp.png",
+      "imageHint": "logo"
+    },
+    {
+      "id": "partner-wff",
+      "description": "Logo of Women Fund Fiji.",
+      "imageUrl": "/images/partner-wff.png",
+      "imageHint": "logo"
+    },
+    {
+      "id": "partner-mfat",
+      "description": "Logo of New Zealand Ministry of Foreign Affairs and Trade.",
+      "imageUrl": "/images/partner-mfat.png",
+      "imageHint": "logo"
+    }
+  ]
+}
