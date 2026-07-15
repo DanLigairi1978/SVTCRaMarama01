@@ -86,14 +86,26 @@ export default function StoriesPage() {
               </h2>
 
               {story.photoUrls.length > 0 && (
-                <div className="grid grid-cols-2 gap-3 mb-8 h-72 md:h-96">
-                  <div className="relative row-span-2 rounded-md overflow-hidden">
-                    <Image src={story.photoUrls[0]} alt={story.heading} fill className="object-cover" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                  <div className="relative aspect-[4/5] rounded-md overflow-hidden">
+                    <Image
+                      src={story.photoUrls[0]}
+                      alt={story.heading}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                    />
                   </div>
                   <div className="grid grid-rows-2 gap-3">
                     {story.photoUrls.slice(1, 3).map((url, i) => (
-                      <div key={i} className="relative rounded-md overflow-hidden">
-                        <Image src={url} alt={`${story.heading} photo ${i + 2}`} fill className="object-cover" />
+                      <div key={i} className="relative aspect-square rounded-md overflow-hidden">
+                        <Image
+                          src={url}
+                          alt={`${story.heading} photo ${i + 2}`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, 25vw"
+                        />
                       </div>
                     ))}
                   </div>
