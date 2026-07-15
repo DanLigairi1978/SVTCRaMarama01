@@ -7,15 +7,15 @@ export function Logo() {
       <Image
         src="/images/svtc-logo-white.png"
         alt="SVTC Logo"
-        width={40}
-        height={40}
-        className="bg-primary rounded-full p-1"
+        width={38}
+        height={38}
+        className="bg-rust-500 rounded-full p-1.5"
       />
       <div>
-        <div className="font-headline text-2xl font-bold text-primary tracking-tight group-hover:text-primary/90 transition-colors">
+        <div className="font-headline text-lg font-bold tracking-tight text-ivory-100 group-hover:text-ochre-200 transition-colors">
           Ra Marama
         </div>
-        <p className="text-xs text-muted-foreground -mt-1">SVTC Cakaudrove</p>
+        <p className="font-label text-[0.65rem] uppercase tracking-[0.14em] text-ivory-300 -mt-0.5">SVTC Cakaudrove</p>
       </div>
     </Link>
   );

@@ -1,45 +1,58 @@
 import Link from "next/link";
 import { Logo } from "./logo";
-import { Facebook } from "lucide-react";
+import { Facebook, Mail, MapPin, Phone } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white border-t border-gray-800">
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="grid gap-8 md:grid-cols-3">
-          <div className="space-y-4">
+    <footer className="bg-charcoal-900 text-ivory-300">
+      <div className="container mx-auto px-4 py-14 md:py-16">
+        <div className="grid gap-12 md:grid-cols-3">
+          <div className="space-y-4 max-w-xs">
             <Logo />
-            <p className="text-sm text-gray-400 max-w-xs">
-              Soqosoqo Vakamarama iTaukei Cakaudrove. Empowering indigenous women to stand up and shine.
+            <p className="font-body text-sm leading-relaxed text-ivory-300">
+              Soqosoqo Vakamarama iTaukei Cakaudrove — empowering indigenous women of Cakaudrove Province through culture, education, and economic opportunity.
             </p>
           </div>
-          <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-8">
-            <div>
-              <h4 className="font-headline font-semibold mb-3 text-white">Navigate</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/about" className="text-gray-400 hover:text-white">About Us</Link></li>
-                <li><Link href="/work" className="text-gray-400 hover:text-white">Our Work</Link>_</li>
-                <li><Link href="/involved" className="text-gray-400 hover:text-white">Get Involved</Link></li>
-                <li><Link href="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-headline font-semibold mb-3 text-white">Legal</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="#" className="text-gray-400 hover:text-white">Privacy Policy</Link></li>
-                <li><Link href="#" className="text-gray-400 hover:text-white">Terms of Service</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-headline font-semibold mb-3 text-white">Connect</h4>
-              <div className="flex space-x-4">
-                <Link href="https://www.facebook.com/soqosoqo.vakamarama.cakaudrove" className="text-gray-400 hover:text-white" target="_blank" rel="noopener noreferrer"><Facebook /></Link>
-              </div>
-            </div>
+          <div>
+            <h4 className="font-label text-xs font-semibold uppercase tracking-[0.14em] mb-4 text-ivory-100">Site</h4>
+            <ul className="space-y-2.5 font-body text-sm">
+              <li><Link href="/about" className="hover:text-ochre-200 transition-colors">About Us</Link></li>
+              <li><Link href="/work" className="hover:text-ochre-200 transition-colors">Our Work</Link></li>
+              <li><Link href="/calendar" className="hover:text-ochre-200 transition-colors">Calendar</Link></li>
+              <li><Link href="/involved" className="hover:text-ochre-200 transition-colors">Get Involved</Link></li>
+              <li><Link href="/contact" className="hover:text-ochre-200 transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-label text-xs font-semibold uppercase tracking-[0.14em] mb-4 text-ivory-100">Contact</h4>
+            <ul className="space-y-2.5 font-body text-sm">
+              <li className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-rust-300" />
+                <span>Ra Marama Great Hall, Savusavu, Fiji</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 shrink-0 text-rust-300" />
+                <span>(679) 8962012</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 shrink-0 text-rust-300" />
+                <span>svtc2005@gmail.com</span>
+              </li>
+              <li className="flex items-center gap-2.5 pt-1">
+                <Link
+                  href="https://www.facebook.com/soqosoqo.vakamarama.cakaudrove"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-ochre-200 transition-colors"
+                >
+                  <Facebook className="w-4 h-4 shrink-0" /> Facebook
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
-        <div className="mt-8 border-t border-gray-800 pt-6 text-center text-sm text-gray-500">
-          <p>&copy; {new Date().getFullYear()} Meridian Solutions (Fiji) Ltd. All Rights Reserved.</p>
+        <div className="mt-12 border-t border-charcoal-700 pt-6 text-center font-body text-xs text-ivory-300/70">
+          <p>&copy; {new Date().getFullYear()} Soqosoqo Vakamarama iTaukei Cakaudrove. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

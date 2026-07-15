@@ -4,51 +4,78 @@
 
 @layer base {
   :root {
-    --background: 225 100% 97%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 231 48% 54%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 225 60% 92%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 225 60% 92%;
-    --muted-foreground: 224 40% 50%;
-    --accent: 122 39% 50%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
+    /* raw palette — SVTC Design System */
+    --color-charcoal-900: 20 24% 9%;
+    --color-charcoal-700: 30 15% 18%;
+    --color-charcoal-500: 33 15% 30%;
+    --color-clay-600: 28 33% 35%;
+    --color-clay-400: 28 33% 51%;
+    --color-rust-700: 15 60% 34%;
+    --color-rust-500: 13 63% 42%;
+    --color-rust-300: 19 58% 60%;
+    --color-ochre-600: 36 62% 47%;
+    --color-ochre-400: 36 71% 65%;
+    --color-ochre-200: 39 74% 80%;
+    --color-teal-600: 177 39% 29%;
+    --color-teal-400: 177 24% 45%;
+    --color-berry-600: 328 36% 35%;
+    --color-berry-400: 322 26% 53%;
+    --color-ivory-100: 42 47% 96%;
+    --color-ivory-200: 40 42% 92%;
+    --color-ivory-300: 39 40% 85%;
+    --color-white: 0 0% 100%;
+    --color-gray-600: 32 10% 40%;
+    --color-gray-400: 33 11% 60%;
+    --color-gray-200: 38 20% 82%;
+
+    --background: var(--color-ivory-100);
+    --foreground: var(--color-charcoal-900);
+    --card: var(--color-white);
+    --card-foreground: var(--color-charcoal-900);
+    --popover: var(--color-white);
+    --popover-foreground: var(--color-charcoal-900);
+    --primary: var(--color-rust-500);
+    --primary-foreground: var(--color-ivory-100);
+    --secondary: var(--color-ivory-200);
+    --secondary-foreground: var(--color-charcoal-900);
+    --muted: var(--color-ivory-200);
+    --muted-foreground: var(--color-gray-600);
+    --accent: var(--color-ochre-600);
+    --accent-foreground: var(--color-charcoal-900);
+    --destructive: 0 63% 40%;
     --destructive-foreground: 0 0% 98%;
-    --border: 225 30% 88%;
-    --input: 225 30% 88%;
-    --ring: 231 48% 54%;
-    --radius: 0.8rem;
+    --border: var(--color-ivory-300);
+    --input: var(--color-ivory-300);
+    --ring: var(--color-teal-600);
+    --radius: 0.5rem;
+
+    --shadow-card: 0 1px 2px rgba(29,23,18,0.06), 0 8px 24px rgba(29,23,18,0.08);
+    --shadow-elevated: 0 4px 8px rgba(29,23,18,0.08), 0 20px 48px rgba(29,23,18,0.14);
   }
- 
+
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 0 0% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 0 0% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 231 48% 54%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 225 20% 20%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 225 20% 20%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 122 39% 50%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
+    --background: var(--color-charcoal-900);
+    --foreground: var(--color-ivory-100);
+    --card: var(--color-charcoal-700);
+    --card-foreground: var(--color-ivory-100);
+    --popover: var(--color-charcoal-700);
+    --popover-foreground: var(--color-ivory-100);
+    --primary: var(--color-rust-500);
+    --primary-foreground: var(--color-ivory-100);
+    --secondary: var(--color-charcoal-700);
+    --secondary-foreground: var(--color-ivory-100);
+    --muted: var(--color-charcoal-700);
+    --muted-foreground: var(--color-gray-400);
+    --accent: var(--color-ochre-400);
+    --accent-foreground: var(--color-charcoal-900);
+    --destructive: 0 55% 35%;
     --destructive-foreground: 0 0% 98%;
-    --border: 225 20% 30%;
-    --input: 225 20% 30%;
-    --ring: 231 48% 54%;
+    --border: var(--color-charcoal-500);
+    --input: var(--color-charcoal-500);
+    --ring: var(--color-teal-400);
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;

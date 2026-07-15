@@ -20,24 +20,35 @@ const navLinks: NavLink[] = [
   { href: "/contact", label: "Contact" },
 ];
 
+// Routes that open on a full-bleed photo hero — header floats transparent over it.
+const HERO_ROUTES = ["/", "/about", "/work", "/involved", "/calendar"];
+
 export function Header() {
   const pathname = usePathname();
   const { user, isAdmin, signInWithGoogle, logout } = useAuth();
+  const isHeroRoute = HERO_ROUTES.includes(pathname);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
+    <header
+      className={cn(
+        "z-50 w-full",
+        isHeroRoute
+          ? "absolute top-0 left-0 right-0 bg-gradient-to-b from-charcoal-900/70 to-transparent"
+          : "sticky top-0 bg-charcoal-900"
+      )}
+    >
+      <div className="container flex h-20 items-center">
         <Logo />
-        <nav className="hidden md:flex md:ml-10 md:space-x-6">
+        <nav className="hidden md:flex md:ml-10 md:space-x-8">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
+                "font-label text-xs font-semibold uppercase tracking-wide border-b-2 pb-1 transition-colors",
                 pathname === link.href
-                  ? "text-primary"
-                  : "text-muted-foreground"
+                  ? "text-ochre-200 border-ochre-200"
+                  : "text-ivory-100 border-transparent hover:text-ochre-200"
               )}
             >
               {link.label}
@@ -47,10 +58,10 @@ export function Header() {
             <Link
               href="/dashboard"
               className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
+                "font-label text-xs font-semibold uppercase tracking-wide border-b-2 pb-1 transition-colors",
                 pathname === "/dashboard"
-                  ? "text-primary"
-                  : "text-muted-foreground"
+                  ? "text-ochre-200 border-ochre-200"
+                  : "text-ivory-100 border-transparent hover:text-ochre-200"
               )}
             >
               Dashboard
@@ -62,18 +73,15 @@ export function Header() {
             <MobileNav navLinks={navLinks} />
           </div>
 
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-3">
             {!user ? (
-              <Button onClick={signInWithGoogle} variant="outline" size="sm">
+              <Button onClick={signInWithGoogle} variant="inverse" size="sm">
                 Sign In
               </Button>
             ) : (
-              <div className="flex items-center gap-2">
-                {/* Optional: Show user name or avatar here */}
-                <Button onClick={logout} variant="ghost" size="sm">
-                  Sign Out
-                </Button>
-              </div>
+              <Button onClick={logout} variant="ghost" size="sm" className="text-ivory-100 hover:text-ochre-200">
+                Sign Out
+              </Button>
             )}
 
             <Button asChild>

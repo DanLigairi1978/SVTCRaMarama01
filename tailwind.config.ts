@@ -17,11 +17,44 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
-        headline: ['Poppins', 'sans-serif'],
+        body: ['var(--font-lora)', 'serif'],
+        headline: ['var(--font-archivo)', 'sans-serif'],
+        label: ['var(--font-archivo)', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
+        charcoal: {
+          900: 'hsl(var(--color-charcoal-900))',
+          700: 'hsl(var(--color-charcoal-700))',
+          500: 'hsl(var(--color-charcoal-500))',
+        },
+        clay: {
+          600: 'hsl(var(--color-clay-600))',
+          400: 'hsl(var(--color-clay-400))',
+        },
+        rust: {
+          700: 'hsl(var(--color-rust-700))',
+          500: 'hsl(var(--color-rust-500))',
+          300: 'hsl(var(--color-rust-300))',
+        },
+        ochre: {
+          600: 'hsl(var(--color-ochre-600))',
+          400: 'hsl(var(--color-ochre-400))',
+          200: 'hsl(var(--color-ochre-200))',
+        },
+        teal: {
+          600: 'hsl(var(--color-teal-600))',
+          400: 'hsl(var(--color-teal-400))',
+        },
+        berry: {
+          600: 'hsl(var(--color-berry-600))',
+          400: 'hsl(var(--color-berry-400))',
+        },
+        ivory: {
+          100: 'hsl(var(--color-ivory-100))',
+          200: 'hsl(var(--color-ivory-200))',
+          300: 'hsl(var(--color-ivory-300))',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -74,9 +107,13 @@ export default {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: '14px',
+        md: 'var(--radius)',
+        sm: '4px',
+      },
+      boxShadow: {
+        card: 'var(--shadow-card)',
+        elevated: 'var(--shadow-elevated)',
       },
       keyframes: {
         'accordion-down': {

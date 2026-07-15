@@ -24,12 +24,12 @@ export function MobileNav({ navLinks }: MobileNavProps) {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" className="text-ivory-100 hover:text-ochre-200">
           <Menu className="h-6 w-6" />
           <span className="sr-only">Open menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left">
+      <SheetContent side="left" className="bg-charcoal-900 border-charcoal-700">
         <SheetHeader>
           <Logo />
         </SheetHeader>
@@ -39,7 +39,7 @@ export function MobileNav({ navLinks }: MobileNavProps) {
               key={link.href}
               href={link.href}
               onClick={() => setIsOpen(false)}
-              className="text-lg font-medium text-muted-foreground hover:text-primary"
+              className="font-label text-lg font-semibold uppercase tracking-wide text-ivory-100 hover:text-ochre-200"
             >
               {link.label}
             </Link>

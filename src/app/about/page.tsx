@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageHeader } from '@/components/layout/page-header';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Landmark, Scale, Target, Handshake } from 'lucide-react';
 
@@ -28,30 +29,19 @@ export default function AboutPage() {
 
   return (
     <div className="bg-background">
-      <header className="relative h-[50vh] flex items-center justify-center text-center text-white">
-        {aboutHeaderImage && (
-          <Image
-            src={aboutHeaderImage.imageUrl}
-            alt={aboutHeaderImage.description}
-            fill
-            className="object-cover object-[center_20%] brightness-50"
-            priority
-            data-ai-hint={aboutHeaderImage.imageHint}
-          />
-        )}
-        <div className="relative z-10 p-4 max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-white">About SVTC</h1>
-          <p className="mt-4 text-lg md:text-xl text-white/90">
-            Learn about our journey, our purpose, and the values that guide our mission to empower the women of Cakaudrove.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        image={aboutHeaderImage}
+        eyebrow="Our Story"
+        title="About SVTC"
+        description="Learn about our journey, our purpose, and the values that guide our mission to empower the women of Cakaudrove."
+      />
 
       <main className="container mx-auto px-4 py-16 md:py-24 space-y-16">
         <section id="history" className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-3xl font-bold text-primary mb-4">Our History & Context</h2>
-            <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
+            <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-primary">Since 2005</span>
+            <h2 className="font-headline text-3xl font-bold mt-3 mb-4">Our History &amp; Context</h2>
+            <div className="space-y-4 font-body text-muted-foreground text-lg leading-relaxed">
               <p>
                 The Soqosoqo Vakamarama iTaukei Cakaudrove (SVTC) was revitalized in 2005, building on a long legacy of women's leadership in the province. Our journey reached a significant milestone in 2016 when we were officially registered as a Non-Governmental Organization (NGO).
               </p>
@@ -60,7 +50,7 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          <div className="relative h-80 rounded-xl overflow-hidden shadow-xl">
+          <div className="relative h-80 rounded-md overflow-hidden shadow-elevated">
             {historyImage && (
               <Image
                 src={historyImage.imageUrl}
@@ -75,25 +65,25 @@ export default function AboutPage() {
         </section>
 
         <section id="purpose" className="grid md:grid-cols-2 gap-8">
-          <Card className="shadow-lg">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl">
-                <Target className="w-8 h-8 text-accent" />
-                Our Vision & Mission
+                <Target className="w-7 h-7 text-accent" />
+                Our Vision &amp; Mission
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-muted-foreground">
+            <CardContent className="space-y-4">
               <div>
                 <h3 className="font-headline font-semibold text-foreground mb-1">Vision</h3>
-                <p>To be a vibrant and empowered community of iTaukei women leading sustainable development in Cakaudrove.</p>
+                <p className="font-body text-muted-foreground">To be a vibrant and empowered community of iTaukei women leading sustainable development in Cakaudrove.</p>
               </div>
               <div>
                 <h3 className="font-headline font-semibold text-foreground mb-1">Mission</h3>
-                <p>To empower and support iTaukei women through programs in cultural preservation, education, economic growth, and social well-being.</p>
+                <p className="font-body text-muted-foreground">To empower and support iTaukei women through programs in cultural preservation, education, economic growth, and social well-being.</p>
               </div>
             </CardContent>
           </Card>
-          <Card className="shadow-lg">
+          <Card>
             <CardHeader>
               <CardTitle className="text-2xl">Our Core Values</CardTitle>
             </CardHeader>
@@ -104,11 +94,11 @@ export default function AboutPage() {
                   return (
                     <li key={value.title} className="flex items-start gap-4">
                       <div className="p-2 bg-accent/10 rounded-full mt-1">
-                        <Icon className="w-6 h-6 text-accent" />
+                        <Icon className="w-5 h-5 text-accent" />
                       </div>
                       <div>
                         <h4 className="font-headline font-semibold text-foreground">{value.title}</h4>
-                        <p className="text-sm text-muted-foreground">{value.description}</p>
+                        <p className="font-body text-sm text-muted-foreground">{value.description}</p>
                       </div>
                     </li>
                   )
@@ -118,10 +108,10 @@ export default function AboutPage() {
           </Card>
         </section>
 
-        <section id="great-hall" className="bg-secondary/50 rounded-xl p-8 md:p-12">
+        <section id="great-hall" className="bg-secondary/50 rounded-md p-8 md:p-12">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {hallImage && (
-              <div className="relative h-80 rounded-lg overflow-hidden shadow-lg order-last md:order-first">
+              <div className="relative h-80 rounded-md overflow-hidden shadow-card order-last md:order-first">
                 <Image
                   src={hallImage.imageUrl}
                   alt={hallImage.description}
@@ -133,11 +123,12 @@ export default function AboutPage() {
               </div>
             )}
             <div className="space-y-4">
-              <h2 className="text-3xl font-bold text-primary">Ra Marama Great Hall</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-primary">Our Home</span>
+              <h2 className="font-headline text-3xl font-bold">Ra Marama Great Hall</h2>
+              <p className="font-body text-lg text-muted-foreground leading-relaxed">
                 Our headquarters, the Ra Marama Great Hall in Savusavu, is the heart of our organization. More than just a building, it is a symbol of our strength, resilience, and unity.
               </p>
-              <p className="text-muted-foreground">
+              <p className="font-body text-muted-foreground">
                 Designed in partnership with Architects Without Frontiers, the hall serves as a central hub for our training programs, community gatherings, and administrative operations. It stands as a testament to what we can achieve together and provides a welcoming space for all women of Cakaudrove.
               </p>
             </div>
