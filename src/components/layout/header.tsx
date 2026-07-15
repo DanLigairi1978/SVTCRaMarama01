@@ -15,6 +15,7 @@ const navLinks: NavLink[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/work", label: "Our Work" },
+  { href: "/stories", label: "Stories" },
   { href: "/calendar", label: "Calendar" },
   { href: "/involved", label: "Get Involved" },
   { href: "/contact", label: "Contact" },
@@ -37,15 +38,15 @@ export function Header() {
           : "sticky top-0 bg-charcoal-900"
       )}
     >
-      <div className="container flex h-20 items-center">
+      <div className="mx-auto max-w-[1400px] w-full px-4 lg:px-6 xl:px-8 flex min-h-20 py-3 items-center">
         <Logo />
-        <nav className="hidden md:flex md:ml-10 md:space-x-8">
+        <nav className="hidden lg:flex lg:ml-4 lg:space-x-2.5 xl:ml-10 xl:space-x-6">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "font-label text-xs font-semibold uppercase tracking-wide border-b-2 pb-1 transition-colors",
+                "font-label text-[0.65rem] xl:text-xs font-semibold uppercase border-b-2 pb-1 whitespace-nowrap transition-colors",
                 pathname === link.href
                   ? "text-ochre-200 border-ochre-200"
                   : "text-ivory-100 border-transparent hover:text-ochre-200"
@@ -58,7 +59,7 @@ export function Header() {
             <Link
               href="/dashboard"
               className={cn(
-                "font-label text-xs font-semibold uppercase tracking-wide border-b-2 pb-1 transition-colors",
+                "font-label text-[0.65rem] xl:text-xs font-semibold uppercase border-b-2 pb-1 whitespace-nowrap transition-colors",
                 pathname === "/dashboard"
                   ? "text-ochre-200 border-ochre-200"
                   : "text-ivory-100 border-transparent hover:text-ochre-200"
@@ -68,12 +69,12 @@ export function Header() {
             </Link>
           )}
         </nav>
-        <div className="flex flex-1 items-center justify-end space-x-4">
-          <div className="md:hidden">
+        <div className="flex flex-1 items-center justify-end space-x-2 xl:space-x-4">
+          <div className="lg:hidden">
             <MobileNav navLinks={navLinks} />
           </div>
 
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-1.5 xl:gap-2">
             {!user ? (
               <Button onClick={signInWithGoogle} variant="inverse" size="sm">
                 Sign In
@@ -84,9 +85,9 @@ export function Header() {
               </Button>
             )}
 
-            <Button asChild>
+            <Button asChild size="sm">
               <Link href="/involved">
-                <HeartHandshake className="mr-2 h-4 w-4" /> Support Us
+                <HeartHandshake className="mr-1.5 h-4 w-4 hidden xl:inline" /> Support Us
               </Link>
             </Button>
           </div>

@@ -11,11 +11,8 @@ export function Logo() {
         height={38}
         className="bg-rust-500 rounded-full p-1.5"
       />
-      <div>
-        <div className="font-headline text-lg font-bold tracking-tight text-ivory-100 group-hover:text-ochre-200 transition-colors">
-          Ra Marama
-        </div>
-        <p className="font-label text-[0.65rem] uppercase tracking-[0.14em] text-ivory-300 -mt-0.5">SVTC Cakaudrove</p>
+      <div className="font-headline text-[0.7rem] sm:text-xs md:text-sm font-bold leading-tight tracking-tight text-ivory-100 group-hover:text-ochre-200 transition-colors whitespace-nowrap">
+        Nai Soqosoqo Vakamarama iTaukei Cakaudrove
       </div>
     </Link>
   );

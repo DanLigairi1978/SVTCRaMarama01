@@ -46,3 +46,14 @@ export type Partner = {
   logoId: string;
   url: string;
 };
+
+export type Story = {
+  id: string;
+  authorName: string;
+  heading: string;
+  body: string;
+  photoUrls: string[];
+  photoPaths: string[];
+  createdAt: Date;
+  updatedAt: Date;
+};
