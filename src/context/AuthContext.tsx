@@ -31,10 +31,7 @@ const ADMIN_EMAILS = [
     "svtc05@gmail.com",
     "bulutani@yahoo.com",
     "ligarius22@gmail.com",
-    // Add your email here temporarily for testing if needed, or rely on the user adding it.
-    // The user said "only I and svtc05... and bulutani..." so implies the user has an email too.
-    // I will add a placeholder or rely on them testing with one of these.
-    // actually, the user said "me", I don't know their email. I'll add a console log to show the email.
+    "sheilamlunter@gmail.com",
 ];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
