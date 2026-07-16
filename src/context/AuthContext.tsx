@@ -32,6 +32,9 @@ const ADMIN_EMAILS = [
     "bulutani@yahoo.com",
     "ligarius22@gmail.com",
     "sheilamlunter@gmail.com",
+    "navareafarm@gmail.com",
+    "macashaw1@gmail.com",
+    "karanavatulesiash@gmail.com",
 ];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
