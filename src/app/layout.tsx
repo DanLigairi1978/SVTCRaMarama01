@@ -1,23 +1,23 @@
 import type { Metadata } from 'next';
-import { Archivo, Lora } from 'next/font/google';
+import { Montserrat, Dancing_Script } from 'next/font/google';
 import './globals.css';
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 
-const archivo = Archivo({
+// Montserrat carries all structural type (body, UI, headlines); Dancing Script is
+// the decorative cursive used only for eyebrow/kicker lines above section titles.
+const montserrat = Montserrat({
   subsets: ['latin'],
-  weight: ['500', '600', '700', '800', '900'],
-  variable: '--font-archivo',
+  variable: '--font-montserrat',
   display: 'swap',
 });
 
-const lora = Lora({
+const dancingScript = Dancing_Script({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-lora',
+  weight: ['500', '600', '700'],
+  variable: '--font-dancing',
   display: 'swap',
 });
 
@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("scroll-smooth", archivo.variable, lora.variable)}>
+    <html lang="en" className={cn("scroll-smooth", montserrat.variable, dancingScript.variable)}>
       <body className={cn(
         "min-h-screen bg-background font-body antialiased flex flex-col"
       )}>

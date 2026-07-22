@@ -6,6 +6,7 @@ import { collection, getDocs, query, orderBy, Timestamp } from "firebase/firesto
 import { db } from "@/lib/firebase";
 import { format } from "date-fns";
 import { Loader2 } from "lucide-react";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import type { Story } from "@/lib/types";
 
 interface StoryDoc {
@@ -13,6 +14,7 @@ interface StoryDoc {
   heading: string;
   body: string;
   photoUrls: string[];
+  photoPaths?: string[];
   createdAt?: Timestamp;
 }
 
@@ -33,6 +35,7 @@ export default function StoriesPage() {
             heading: data.heading,
             body: data.body,
             photoUrls: data.photoUrls || [],
+            photoPaths: data.photoPaths || [],
             createdAt: data.createdAt?.toDate() ?? new Date(),
             updatedAt: data.createdAt?.toDate() ?? new Date(),
           };
@@ -52,10 +55,8 @@ export default function StoriesPage() {
     <div className="bg-background">
       <header className="bg-charcoal-900 py-20 md:py-28 text-center">
         <div className="container mx-auto px-4">
-          <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-ochre-200">
-            Community Voices
-          </span>
-          <h1 className="font-headline text-4xl md:text-5xl font-black text-ivory-100 mt-3">
+          <SectionEyebrow tone="accent" align="center">Community Voices</SectionEyebrow>
+          <h1 className="font-headline text-4xl md:text-5xl font-semibold tracking-tight text-ivory-100 mt-1">
             Stories: Where Hope Takes Root
           </h1>
           <h3 className="font-body mt-4 text-lg md:text-xl text-ivory-300 max-w-2xl mx-auto leading-relaxed">
@@ -81,7 +82,7 @@ export default function StoriesPage() {
                 </p>
               </div>
 
-              <h2 className="font-headline text-3xl md:text-4xl font-bold text-foreground mb-8 leading-tight">
+              <h2 className="font-headline text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-8 leading-tight">
                 {story.heading}
               </h2>
 

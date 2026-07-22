@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    /* raw palette — SVTC Design System */
-    --color-charcoal-900: 20 24% 9%;
-    --color-charcoal-700: 30 15% 18%;
-    --color-charcoal-500: 33 15% 30%;
+    /* raw palette — SVTC Design System (travel-reference restyle: warm accents on an airy near-white canvas) */
+    --color-charcoal-900: 28 18% 10%;
+    --color-charcoal-700: 30 14% 18%;
+    --color-charcoal-500: 33 13% 32%;
     --color-clay-600: 28 33% 35%;
     --color-clay-400: 28 33% 51%;
     --color-rust-700: 15 60% 34%;
@@ -20,15 +20,21 @@
     --color-teal-400: 177 24% 45%;
     --color-berry-600: 328 36% 35%;
     --color-berry-400: 322 26% 53%;
-    --color-ivory-100: 42 47% 96%;
-    --color-ivory-200: 40 42% 92%;
-    --color-ivory-300: 39 40% 85%;
     --color-white: 0 0% 100%;
-    --color-gray-600: 32 10% 40%;
-    --color-gray-400: 33 11% 60%;
-    --color-gray-200: 38 20% 82%;
 
-    --background: var(--color-ivory-100);
+    /* airy neutral canvas: near-white warm body, subtle warm container tint, faint warm hairline */
+    --color-body: 42 40% 99%;
+    --color-container: 40 30% 96%;
+    --color-hairline: 38 24% 90%;
+    /* legacy ivory / gray aliases kept pointing at the new airy neutrals */
+    --color-ivory-100: var(--color-body);
+    --color-ivory-200: var(--color-container);
+    --color-ivory-300: var(--color-hairline);
+    --color-gray-600: 30 8% 42%;
+    --color-gray-400: 33 9% 62%;
+    --color-gray-200: var(--color-hairline);
+
+    --background: var(--color-body);
     --foreground: var(--color-charcoal-900);
     --card: var(--color-white);
     --card-foreground: var(--color-charcoal-900);
@@ -47,10 +53,11 @@
     --border: var(--color-ivory-300);
     --input: var(--color-ivory-300);
     --ring: var(--color-teal-600);
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --shadow-card: 0 1px 2px rgba(29,23,18,0.06), 0 8px 24px rgba(29,23,18,0.08);
-    --shadow-elevated: 0 4px 8px rgba(29,23,18,0.08), 0 20px 48px rgba(29,23,18,0.14);
+    /* lighter, airier two-tier shadow system to match the reference restyle */
+    --shadow-card: 0 2px 8px hsl(28 20% 20% / 0.05);
+    --shadow-elevated: 0 8px 28px hsl(28 20% 20% / 0.10);
   }
 
   .dark {

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { ImagePlaceholder } from "@/lib/placeholder-images";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 interface PageHeaderProps {
   image?: ImagePlaceholder;
@@ -23,10 +24,8 @@ export function PageHeader({ image, eyebrow, title, description }: PageHeaderPro
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/30 to-charcoal-900/10" />
       <div className="relative z-10 container px-4 pb-12 md:pb-16 max-w-3xl">
-        <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-ochre-200">
-          {eyebrow}
-        </span>
-        <h1 className="font-headline text-4xl md:text-5xl font-black tracking-tight mt-3">{title}</h1>
+        <SectionEyebrow tone="accent">{eyebrow}</SectionEyebrow>
+        <h1 className="font-headline text-4xl md:text-5xl font-semibold tracking-tight mt-1.5">{title}</h1>
         {description && (
           <p className="font-body text-lg text-ivory-200 max-w-2xl mt-4 leading-relaxed">{description}</p>
         )}

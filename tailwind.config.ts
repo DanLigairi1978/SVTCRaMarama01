@@ -17,9 +17,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['var(--font-lora)', 'serif'],
-        headline: ['var(--font-archivo)', 'sans-serif'],
-        label: ['var(--font-archivo)', 'sans-serif'],
+        body: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
+        headline: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
+        label: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
+        script: ['var(--font-dancing)', 'cursive'],
         code: ['monospace'],
       },
       colors: {
@@ -107,9 +108,9 @@ export default {
         },
       },
       borderRadius: {
-        lg: '14px',
+        lg: '20px',
         md: 'var(--radius)',
-        sm: '4px',
+        sm: '6px',
       },
       boxShadow: {
         card: 'var(--shadow-card)',

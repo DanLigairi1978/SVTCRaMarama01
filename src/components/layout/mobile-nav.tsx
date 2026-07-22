@@ -9,6 +9,8 @@ import {
   Sheet,
   SheetContent,
   SheetHeader,
+  SheetTitle,
+  SheetDescription,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Logo } from "./logo";
@@ -31,6 +33,10 @@ export function MobileNav({ navLinks }: MobileNavProps) {
       </SheetTrigger>
       <SheetContent side="left" className="bg-charcoal-900 border-charcoal-700">
         <SheetHeader>
+          <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+          <SheetDescription className="sr-only">
+            Links to the main sections of the SVTC website.
+          </SheetDescription>
           <Logo />
         </SheetHeader>
         <div className="mt-8 flex flex-col space-y-4">

@@ -1,6 +1,7 @@
 
 import ContactForm from './contact-form';
 import { Card, CardContent } from '@/components/ui/card';
+import { SectionEyebrow } from '@/components/marketing/section-eyebrow';
 import { MapPin, Phone, Mail } from 'lucide-react';
 
 export default async function ContactPage() {
@@ -12,8 +13,8 @@ export default async function ContactPage() {
     <div className="bg-background">
       <header className="bg-charcoal-900 py-20 md:py-28 text-center">
         <div className="container mx-auto px-4">
-          <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-ochre-200">Get in Touch</span>
-          <h1 className="font-headline text-4xl md:text-5xl font-black text-ivory-100 mt-3">Contact Us</h1>
+          <SectionEyebrow tone="accent" align="center">Get in touch</SectionEyebrow>
+          <h1 className="font-headline text-4xl md:text-5xl font-semibold tracking-tight text-ivory-100 mt-1">Contact Us</h1>
           <p className="font-body mt-4 text-lg md:text-xl text-ivory-300 max-w-3xl mx-auto leading-relaxed">
             We'd love to hear from you. Reach out with questions, partnership inquiries, or to learn more about our work.
           </p>
@@ -24,7 +25,7 @@ export default async function ContactPage() {
         <div className="grid lg:grid-cols-5 gap-12">
           <div className="lg:col-span-2 space-y-8">
             <div>
-              <h2 className="font-headline text-3xl font-bold">Get In Touch</h2>
+              <h2 className="font-headline text-3xl font-semibold tracking-tight">Get In Touch</h2>
               <p className="font-body text-muted-foreground mt-2">
                 Fill out the form or use the contact details below.
               </p>
@@ -50,7 +51,7 @@ export default async function ContactPage() {
 
           <div className="lg:col-span-3 space-y-6">
             <div>
-              <h3 className="font-headline text-2xl font-bold">Our Location</h3>
+              <h3 className="font-headline text-2xl font-semibold tracking-tight">Our Location</h3>
               <p className="font-body text-muted-foreground mt-2">{locationDetails.locationDescription}</p>
             </div>
             <div className="relative aspect-video w-full rounded-md overflow-hidden shadow-elevated">

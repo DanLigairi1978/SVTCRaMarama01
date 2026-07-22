@@ -12,7 +12,7 @@ export function StatBlock({ value, label, tone = "light" }: StatBlockProps) {
     <div className="flex flex-col gap-1">
       <div
         className={cn(
-          "font-headline text-4xl font-black leading-none md:text-5xl",
+          "font-headline text-4xl font-semibold leading-none md:text-5xl",
           dark ? "text-ivory-100" : "text-primary"
         )}
       >

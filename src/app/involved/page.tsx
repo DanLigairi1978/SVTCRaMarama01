@@ -26,7 +26,7 @@ export default function InvolvedPage() {
             <span className="inline-flex items-center bg-primary text-primary-foreground px-3.5 py-1.5 rounded-full font-label text-xs font-semibold uppercase tracking-wide">
               <Users className="w-4 h-4 mr-2" /> Membership
             </span>
-            <h2 className="font-headline text-3xl font-bold">Become a Member</h2>
+            <h2 className="font-headline text-3xl md:text-4xl font-semibold tracking-tight">Become a Member</h2>
             <p className="font-body text-lg text-muted-foreground leading-relaxed">
               Membership is open to all indigenous women of Cakaudrove. Join a network of sisters dedicated to mutual support and community growth. You can join through:
             </p>
@@ -79,7 +79,7 @@ export default function InvolvedPage() {
 
         <section id="support-us" className="bg-charcoal-900 text-ivory-100 rounded-md p-8 md:p-12 text-center">
           <HeartHandshake className="w-14 h-14 mx-auto mb-4 text-ochre-200" />
-          <h2 className="font-headline text-3xl font-bold">Support Our Vision</h2>
+          <h2 className="font-headline text-3xl md:text-4xl font-semibold tracking-tight">Support Our Vision</h2>
           <p className="font-body mt-4 text-lg max-w-3xl mx-auto text-ivory-300">
             As a non-profit organization, we rely on the generosity of donors and partners to fund our vital programs. Your contribution, no matter the size, directly supports economic empowerment, educational opportunities, and health initiatives for women and children in Cakaudrove.
           </p>
@@ -92,7 +92,7 @@ export default function InvolvedPage() {
 
         <section id="partners">
           <div className="text-center mb-12">
-            <h2 className="font-headline text-3xl font-bold">Our Valued Partners</h2>
+            <h2 className="font-headline text-3xl md:text-4xl font-semibold tracking-tight">Our Valued Partners</h2>
             <p className="font-body text-muted-foreground mt-2 max-w-2xl mx-auto">
               We are grateful for the collaboration and support from organizations who share our vision.
             </p>

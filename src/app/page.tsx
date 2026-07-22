@@ -2,12 +2,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { StatBlock } from '@/components/marketing/stat-block';
+import { SectionEyebrow } from '@/components/marketing/section-eyebrow';
 import { PartnerLogoStrip } from '@/components/marketing/partner-logo-strip';
 import { NewsSection } from '@/components/news-section';
 import { featuredProjects } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight } from 'lucide-react';
+
+// Per-pillar badge tones, mirroring the design system's category colours.
+const categoryTone: Record<string, 'rust' | 'ochre' | 'teal'> = {
+  Culture: 'rust',
+  Education: 'ochre',
+  Economy: 'teal',
+};
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(p => p.id === 'home-hero');
@@ -27,10 +36,8 @@ export default function Home() {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/25 to-charcoal-900/10" />
         <div className="relative z-10 container px-4 pb-16 md:pb-24 max-w-3xl">
-          <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-ochre-200">
-            Cakaudrove Province, Fiji
-          </span>
-          <h1 className="font-headline text-4xl md:text-6xl font-black tracking-tight leading-[1.05] mt-4">
+          <SectionEyebrow tone="accent">Cakaudrove Province, Fiji</SectionEyebrow>
+          <h1 className="font-headline text-4xl md:text-6xl font-semibold tracking-tight leading-[1.08] mt-2">
             Women Stand Up<br />and Shine.
           </h1>
           <p className="font-body text-lg md:text-xl text-ivory-200 max-w-xl mt-5 leading-relaxed">
@@ -59,9 +66,9 @@ export default function Home() {
 
       <section id="featured" className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl mb-12">
-            <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-primary">What We Do</span>
-            <h2 className="font-headline text-3xl md:text-4xl font-bold mt-3">Our Core Pillars</h2>
+          <div className="max-w-2xl mx-auto mb-12 text-center">
+            <SectionEyebrow align="center">What we do</SectionEyebrow>
+            <h2 className="font-headline text-3xl md:text-5xl font-semibold tracking-tight mt-1">Our Core Pillars</h2>
             <p className="font-body text-lg text-muted-foreground mt-3 leading-relaxed">
               We focus on three key areas to create sustainable change and uplift our communities.
             </p>
@@ -83,9 +90,9 @@ export default function Home() {
                     </div>
                   )}
                   <CardHeader className="pb-2">
-                    <span className="font-label text-xs font-semibold uppercase tracking-[0.12em] text-primary">
+                    <Badge variant={categoryTone[project.category] ?? 'rust'} className="w-fit">
                       {project.category}
-                    </span>
+                    </Badge>
                     <CardTitle className="mt-1">{project.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -109,9 +116,9 @@ export default function Home() {
 
       <section className="py-16 md:py-24 bg-secondary/50">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl mb-12">
-            <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-primary">Stay Informed</span>
-            <h2 className="font-headline text-3xl md:text-4xl font-bold mt-3">Latest News &amp; Updates</h2>
+          <div className="max-w-2xl mx-auto mb-12 text-center">
+            <SectionEyebrow align="center">Stay informed</SectionEyebrow>
+            <h2 className="font-headline text-3xl md:text-5xl font-semibold tracking-tight mt-1">Latest News &amp; Updates</h2>
           </div>
           <NewsSection />
         </div>

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageHeader } from '@/components/layout/page-header';
+import { SectionEyebrow } from '@/components/marketing/section-eyebrow';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Landmark, Scale, Target, Handshake } from 'lucide-react';
 
@@ -39,8 +40,8 @@ export default function AboutPage() {
       <main className="container mx-auto px-4 py-16 md:py-24 space-y-16">
         <section id="history" className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-primary">Since 2005</span>
-            <h2 className="font-headline text-3xl font-bold mt-3 mb-4">Our History &amp; Context</h2>
+            <SectionEyebrow>Since 2005</SectionEyebrow>
+            <h2 className="font-headline text-3xl font-semibold tracking-tight mt-1 mb-4">Our History &amp; Context</h2>
             <div className="space-y-4 font-body text-muted-foreground text-lg leading-relaxed">
               <p>
                 The Soqosoqo Vakamarama iTaukei Cakaudrove (SVTC) was revitalized in 2005, building on a long legacy of women's leadership in the province. Our journey reached a significant milestone in 2016 when we were officially registered as a Non-Governmental Organization (NGO).
@@ -123,8 +124,8 @@ export default function AboutPage() {
               </div>
             )}
             <div className="space-y-4">
-              <span className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-primary">Our Home</span>
-              <h2 className="font-headline text-3xl font-bold">Ra Marama Great Hall</h2>
+              <SectionEyebrow>Our Home</SectionEyebrow>
+              <h2 className="font-headline text-3xl font-semibold tracking-tight">Ra Marama Great Hall</h2>
               <p className="font-body text-lg text-muted-foreground leading-relaxed">
                 Our headquarters, the Ra Marama Great Hall in Savusavu, is the heart of our organization. More than just a building, it is a symbol of our strength, resilience, and unity.
               </p>

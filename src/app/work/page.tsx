@@ -33,7 +33,7 @@ export default function WorkPage() {
 
           <TabsContent value="programs" className="mt-12">
             <div className="text-center mb-12">
-              <h2 className="font-headline text-3xl font-bold">Our Core Programs</h2>
+              <h2 className="font-headline text-3xl md:text-4xl font-semibold tracking-tight">Our Core Programs</h2>
               <p className="font-body text-muted-foreground mt-2">The pillars of our day-to-day activities and long-term impact.</p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
@@ -58,14 +58,14 @@ export default function WorkPage() {
 
           <TabsContent value="strategy" className="mt-12">
             <div className="text-center mb-12">
-              <h2 className="font-headline text-3xl font-bold">Our 5 Strategic Priorities</h2>
+              <h2 className="font-headline text-3xl md:text-4xl font-semibold tracking-tight">Our 5 Strategic Priorities</h2>
               <p className="font-body text-muted-foreground mt-2">Guiding our efforts from 2024 to 2029 to ensure focused, sustainable growth.</p>
             </div>
             <div className="max-w-4xl mx-auto space-y-5">
               {strategicPriorities.map((priority, index) => (
                 <Card key={priority.id}>
                   <CardContent className="p-6 flex items-start gap-6">
-                    <div className="flex-shrink-0 font-headline text-3xl font-black text-primary">
+                    <div className="flex-shrink-0 font-headline text-3xl font-bold text-primary">
                       0{index + 1}
                     </div>
                     <div>
@@ -80,7 +80,7 @@ export default function WorkPage() {
 
           <TabsContent value="projects" className="mt-12">
             <div className="text-center mb-12">
-              <h2 className="font-headline text-3xl font-bold">Current Donor-Funded Projects</h2>
+              <h2 className="font-headline text-3xl md:text-4xl font-semibold tracking-tight">Current Donor-Funded Projects</h2>
               <p className="font-body text-muted-foreground mt-2">Key initiatives made possible by the generous support of our partners.</p>
             </div>
             <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
