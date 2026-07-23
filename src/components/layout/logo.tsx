@@ -4,14 +4,14 @@ import Image from 'next/image';
 export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-3 group">
-      <span className="flex items-center justify-center bg-rust-500 rounded-full px-3 py-1.5">
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-rust-500">
         <Image
           src="/images/svtc-logo-white.png"
           alt="SVTC Logo"
-          width={1440}
-          height={900}
+          width={425}
+          height={693}
           priority
-          className="h-8 w-auto"
+          className="h-9 w-auto"
         />
       </span>
       <div className="font-headline text-[0.7rem] sm:text-xs md:text-sm font-bold leading-tight tracking-tight text-ivory-100 group-hover:text-ochre-200 transition-colors whitespace-nowrap">

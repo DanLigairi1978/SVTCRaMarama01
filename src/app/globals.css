@@ -10,9 +10,9 @@
     --color-charcoal-500: 33 13% 32%;
     --color-clay-600: 28 33% 35%;
     --color-clay-400: 28 33% 51%;
-    --color-rust-700: 15 60% 34%;
-    --color-rust-500: 13 63% 42%;
-    --color-rust-300: 19 58% 60%;
+    --color-rust-700: 30 100% 13%;
+    --color-rust-500: 30 100% 20%; /* #663300 */
+    --color-rust-300: 30 65% 45%;
     --color-ochre-600: 36 62% 47%;
     --color-ochre-400: 36 71% 65%;
     --color-ochre-200: 39 74% 80%;
