@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { collection, getDocs, query, orderBy, deleteDoc, doc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { deleteStoryPhoto } from "@/lib/github-images";
+import { deleteStoryPhoto } from "@/lib/storage-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Trash2, Pencil, Plus } from "lucide-react";

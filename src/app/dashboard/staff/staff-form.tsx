@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { doc, collection, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { uploadStaffPhoto } from "@/lib/github-images";
+import { uploadStaffPhoto } from "@/lib/storage-images";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

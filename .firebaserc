@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "svtc-website"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

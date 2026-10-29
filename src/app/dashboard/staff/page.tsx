@@ -13,7 +13,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { deleteStaffPhoto } from "@/lib/github-images";
+import { deleteStaffPhoto } from "@/lib/storage-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Trash2, Pencil, Plus, ArrowUp, ArrowDown, GripVertical, Save } from "lucide-react";
