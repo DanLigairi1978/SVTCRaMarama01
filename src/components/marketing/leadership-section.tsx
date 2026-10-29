@@ -72,40 +72,48 @@ function StaffCard({ member }: { member: Staff }) {
           <h3 className="font-headline text-2xl font-semibold text-foreground leading-tight">
             {member.fullName}
           </h3>
-          <p className="font-body text-base text-primary font-medium mt-1">
-            {member.jobDescription}
-          </p>
-          <p className="font-label text-xs font-semibold uppercase tracking-wide text-muted-foreground mt-2">
-            Joined {member.yearJoined}
-          </p>
+          {member.jobDescription && (
+            <p className="font-body text-base text-primary font-medium mt-1">
+              {member.jobDescription}
+            </p>
+          )}
+          {member.yearJoined && member.yearJoined.trim() !== "" && member.yearJoined !== "-" && (
+            <p className="font-label text-xs font-semibold uppercase tracking-wide text-muted-foreground mt-2">
+              Joined {member.yearJoined}
+            </p>
+          )}
 
-          <p
-            ref={bioRef}
-            className={cn(
-              "font-body text-muted-foreground mt-4 leading-relaxed whitespace-pre-line",
-              !expanded && "line-clamp-6 md:line-clamp-[8]"
-            )}
-          >
-            {member.bio}
-          </p>
+          {member.bio && member.bio.trim() !== "" && member.bio !== "-" && (
+            <>
+              <p
+                ref={bioRef}
+                className={cn(
+                  "font-body text-muted-foreground mt-4 leading-relaxed whitespace-pre-line",
+                  !expanded && "line-clamp-6 md:line-clamp-[8]"
+                )}
+              >
+                {member.bio}
+              </p>
 
-          {(isOverflowing || expanded) && (
-            <button
-              type="button"
-              onClick={() => setExpanded((v) => !v)}
-              className="mt-3 inline-flex items-center gap-1 font-label text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-              aria-expanded={expanded}
-            >
-              {expanded ? (
-                <>
-                  Show Less <ChevronUp className="h-4 w-4" />
-                </>
-              ) : (
-                <>
-                  Read More <ChevronDown className="h-4 w-4" />
-                </>
+              {(isOverflowing || expanded) && (
+                <button
+                  type="button"
+                  onClick={() => setExpanded((v) => !v)}
+                  className="mt-3 inline-flex items-center gap-1 font-label text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+                  aria-expanded={expanded}
+                >
+                  {expanded ? (
+                    <>
+                      Show Less <ChevronUp className="h-4 w-4" />
+                    </>
+                  ) : (
+                    <>
+                      Read More <ChevronDown className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
               )}
-            </button>
+            </>
           )}
         </div>
       </div>

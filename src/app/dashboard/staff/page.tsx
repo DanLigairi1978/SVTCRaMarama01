@@ -287,9 +287,15 @@ export default function StaffAdminPage() {
                     )}
                     <div className="min-w-0">
                       <h4 className="font-headline font-semibold truncate">{member.fullName}</h4>
-                      <p className="font-body text-sm text-primary font-medium">{member.jobDescription}</p>
-                      <p className="font-body text-xs text-muted-foreground mt-0.5">Joined {member.yearJoined}</p>
-                      <p className="font-body text-sm text-muted-foreground mt-1 line-clamp-2">{member.bio}</p>
+                      {member.jobDescription && (
+                        <p className="font-body text-sm text-primary font-medium">{member.jobDescription}</p>
+                      )}
+                      {member.yearJoined && member.yearJoined.trim() !== "" && member.yearJoined !== "-" && (
+                        <p className="font-body text-xs text-muted-foreground mt-0.5">Joined {member.yearJoined}</p>
+                      )}
+                      {member.bio && member.bio.trim() !== "" && member.bio !== "-" && (
+                        <p className="font-body text-sm text-muted-foreground mt-1 line-clamp-2">{member.bio}</p>
+                      )}
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2 shrink-0">

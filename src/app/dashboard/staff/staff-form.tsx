@@ -89,34 +89,20 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
       setError("Full name must be 100 characters or fewer.");
       return;
     }
-    if (!trimmedJob) {
-      setError("Please enter the staff member's job description / role.");
-      return;
-    }
     if (trimmedJob.length > 150) {
       setError("Job description must be 150 characters or fewer.");
       return;
     }
-    if (!trimmedYear) {
-      setError("Please enter the year joined (e.g. 2016).");
-      return;
-    }
-    const currentYear = new Date().getFullYear();
-    const numericYear = Number(trimmedYear);
-    if (!/^\d{4}$/.test(trimmedYear) || numericYear < 1950 || numericYear > currentYear + 1) {
-      setError(`Please enter a valid 4-digit year between 1950 and ${currentYear + 1}.`);
-      return;
-    }
-    if (!trimmedBio) {
-      setError("Please enter a short bio describing their background and role.");
-      return;
+    if (trimmedYear) {
+      const currentYear = new Date().getFullYear();
+      const numericYear = Number(trimmedYear);
+      if (!/^\d{4}$/.test(trimmedYear) || numericYear < 1950 || numericYear > currentYear + 1) {
+        setError(`Please enter a valid 4-digit year between 1950 and ${currentYear + 1}.`);
+        return;
+      }
     }
     if (trimmedBio.length > 5000) {
       setError("Bio must be 5,000 characters or fewer.");
-      return;
-    }
-    if (!isEditing && !photoFile) {
-      setError("A portrait photo is required for a new staff member.");
       return;
     }
 
@@ -198,7 +184,6 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
               placeholder="e.g. Executive Director"
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
-              required
             />
           </div>
           <div className="space-y-2">
@@ -207,7 +192,6 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
               placeholder="e.g. 2016"
               value={yearJoined}
               onChange={(e) => setYearJoined(e.target.value)}
-              required
             />
           </div>
           <div className="space-y-2">
@@ -217,7 +201,6 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={6}
-              required
             />
           </div>
 
