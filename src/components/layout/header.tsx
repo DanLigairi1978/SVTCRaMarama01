@@ -1,6 +1,6 @@
-
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ import { Logo } from "./logo";
 import { Button } from "../ui/button";
 import { HeartHandshake } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const navLinks: NavLink[] = [
   { href: "/", label: "Home" },
@@ -26,8 +27,20 @@ const HERO_ROUTES = ["/", "/about", "/work", "/involved", "/calendar"];
 
 export function Header() {
   const pathname = usePathname();
-  const { user, isAdmin, signInWithGoogle, logout } = useAuth();
+  const { user, isAdmin, authError, clearAuthError, signInWithGoogle, logout } = useAuth();
+  const { toast } = useToast();
   const isHeroRoute = HERO_ROUTES.includes(pathname);
+
+  useEffect(() => {
+    if (authError) {
+      toast({
+        title: "Authentication Notice",
+        description: authError,
+        variant: "destructive",
+      });
+      clearAuthError();
+    }
+  }, [authError, clearAuthError, toast]);
 
   return (
     <header
@@ -60,7 +73,7 @@ export function Header() {
               href="/dashboard"
               className={cn(
                 "font-label text-[0.65rem] xl:text-xs font-semibold uppercase border-b-2 pb-1 whitespace-nowrap transition-colors",
-                pathname === "/dashboard"
+                pathname.startsWith("/dashboard")
                   ? "text-ochre-200 border-ochre-200"
                   : "text-ivory-100 border-transparent hover:text-ochre-200"
               )}
@@ -91,7 +104,6 @@ export function Header() {
               </Link>
             </Button>
           </div>
-
         </div>
       </div>
     </header>

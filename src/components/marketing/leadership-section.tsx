@@ -23,6 +23,7 @@ interface StaffDoc {
 function StaffCard({ member }: { member: Staff }) {
   const [expanded, setExpanded] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
   const bioRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
@@ -36,11 +37,20 @@ function StaffCard({ member }: { member: Staff }) {
     return () => window.removeEventListener("resize", measure);
   }, [member.bio, expanded]);
 
+  const initials =
+    member.fullName
+      .split(" ")
+      .filter(Boolean)
+      .map((part) => part[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "SV";
+
   return (
     <article className="rounded-md border border-gray-200 bg-ochre-200/25 p-6 md:p-8 shadow-card">
       <div className="grid gap-6 md:grid-cols-[220px,1fr] items-start">
-        {member.photoUrl && (
-          <div className="relative w-full aspect-square md:w-[220px] rounded-md overflow-hidden shadow-card">
+        {member.photoUrl && !imageFailed ? (
+          <div className="relative w-full aspect-square md:w-[220px] rounded-md overflow-hidden shadow-card bg-secondary/50">
             <Image
               src={member.photoUrl}
               alt={member.fullName}
@@ -48,7 +58,14 @@ function StaffCard({ member }: { member: Staff }) {
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 220px"
               unoptimized
+              onError={() => setImageFailed(true)}
             />
+          </div>
+        ) : (
+          <div className="relative w-full aspect-square md:w-[220px] rounded-md overflow-hidden shadow-card bg-secondary/70 flex items-center justify-center">
+            <span className="font-headline text-3xl font-semibold text-primary/70">
+              {initials}
+            </span>
           </div>
         )}
         <div className="min-w-0">

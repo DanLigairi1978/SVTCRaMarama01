@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
+import { AuthProvider } from "@/context/AuthContext";
 
 // Montserrat carries all structural type (body, UI, headlines); Dancing Script is
 // the decorative cursive used only for eyebrow/kicker lines above section titles.
@@ -26,8 +27,6 @@ export const metadata: Metadata = {
   description: 'Official website for the Soqosoqo Vakamarama iTaukei Cakaudrove (SVTC). Women Stand Up and Shine.',
   keywords: ['SVTC', 'Cakaudrove', 'Fiji', 'Women Empowerment', 'NGO', 'Ra Marama', 'SVTC Website'],
 };
-
-import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout({
   children,

@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDummyFallbackKeyForStaticExport",
     authDomain: "svtc-website.firebaseapp.com",
     projectId: "svtc-website",
     storageBucket: "svtc-website.firebasestorage.app",
     messagingSenderId: "377905992979",
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:377905992979:web:buildfallback",
 };
 
 // Initialize Firebase

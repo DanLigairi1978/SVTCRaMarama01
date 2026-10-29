@@ -5,8 +5,10 @@ import Image from "next/image";
 import { collection, getDocs, query, orderBy, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { format } from "date-fns";
-import { Loader2 } from "lucide-react";
+import { Loader2, BookOpen } from "lucide-react";
 import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+import { Button } from "@/components/ui/button";
+import { formatErrorMessage } from "@/lib/error-utils";
 import type { Story } from "@/lib/types";
 
 interface StoryDoc {
@@ -21,33 +23,37 @@ interface StoryDoc {
 export default function StoriesPage() {
   const [stories, setStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  const fetchStories = async () => {
+    setLoading(true);
+    setFetchError(null);
+    try {
+      const q = query(collection(db, "stories"), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+      const list: Story[] = snapshot.docs.map((docSnap) => {
+        const data = docSnap.data() as StoryDoc;
+        return {
+          id: docSnap.id,
+          authorName: data.authorName,
+          heading: data.heading,
+          body: data.body,
+          photoUrls: data.photoUrls || [],
+          photoPaths: data.photoPaths || [],
+          createdAt: data.createdAt?.toDate() ?? new Date(),
+          updatedAt: data.createdAt?.toDate() ?? new Date(),
+        };
+      });
+      setStories(list);
+    } catch (error) {
+      console.error("Error fetching stories:", error);
+      setFetchError(formatErrorMessage(error, "Unable to load stories at this time."));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchStories = async () => {
-      try {
-        const q = query(collection(db, "stories"), orderBy("createdAt", "desc"));
-        const snapshot = await getDocs(q);
-        const list: Story[] = snapshot.docs.map((docSnap) => {
-          const data = docSnap.data() as StoryDoc;
-          return {
-            id: docSnap.id,
-            authorName: data.authorName,
-            heading: data.heading,
-            body: data.body,
-            photoUrls: data.photoUrls || [],
-            photoPaths: data.photoPaths || [],
-            createdAt: data.createdAt?.toDate() ?? new Date(),
-            updatedAt: data.createdAt?.toDate() ?? new Date(),
-          };
-        });
-        setStories(list);
-      } catch (error) {
-        console.error("Error fetching stories:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchStories();
   }, []);
 
@@ -69,6 +75,13 @@ export default function StoriesPage() {
         <div className="flex justify-center py-24">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
+      ) : fetchError ? (
+        <div className="container mx-auto px-4 py-16 text-center space-y-4">
+          <p className="font-body text-destructive">{fetchError}</p>
+          <Button variant="outline" onClick={fetchStories}>
+            Retry
+          </Button>
+        </div>
       ) : stories.length > 0 ? (
         <main className="container mx-auto px-4 py-16 md:py-24 space-y-20 md:space-y-28">
           {stories.map((story) => (
@@ -88,24 +101,26 @@ export default function StoriesPage() {
 
               {story.photoUrls.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-                  <div className="relative aspect-[4/5] rounded-md overflow-hidden">
+                  <div className="relative aspect-[4/5] rounded-md overflow-hidden bg-muted">
                     <Image
                       src={story.photoUrls[0]}
                       alt={story.heading}
                       fill
                       className="object-cover"
                       sizes="(max-width: 640px) 100vw, 50vw"
+                      unoptimized
                     />
                   </div>
                   <div className="grid grid-rows-2 gap-3">
                     {story.photoUrls.slice(1, 3).map((url, i) => (
-                      <div key={i} className="relative aspect-square rounded-md overflow-hidden">
+                      <div key={i} className="relative aspect-square rounded-md overflow-hidden bg-muted">
                         <Image
                           src={url}
                           alt={`${story.heading} photo ${i + 2}`}
                           fill
                           className="object-cover"
                           sizes="(max-width: 640px) 100vw, 25vw"
+                          unoptimized
                         />
                       </div>
                     ))}
@@ -124,7 +139,15 @@ export default function StoriesPage() {
             </article>
           ))}
         </main>
-      ) : null}
+      ) : (
+        <div className="container mx-auto px-4 py-20 text-center max-w-md">
+          <BookOpen className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+          <h3 className="font-headline text-xl font-semibold">No stories published yet</h3>
+          <p className="font-body text-muted-foreground mt-1 text-sm">
+            Check back soon as our community members share their experiences and journeys.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,17 +1,26 @@
-// "use server"; // Removed for static export compatibility
-
 import { z } from "zod";
-// import { revalidatePath } from "next/cache"; // Not available in client
-// import nodemailer from "nodemailer"; // Removed for client-side
-// import { config } from 'dotenv'; // client side env vars are auto loaded if NEXT_PUBLIC
-
-// config(); // Load environment variables
 
 const contactFormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters."),
-  email: z.string().email("Invalid email address."),
-  subject: z.string().min(5, "Subject must be at least 5 characters."),
-  message: z.string().min(10, "Message must be at least 10 characters."),
+  name: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters.")
+    .max(100, "Name must be under 100 characters."),
+  email: z
+    .string()
+    .trim()
+    .email("Please provide a valid email address.")
+    .max(150, "Email must be under 150 characters."),
+  subject: z
+    .string()
+    .trim()
+    .min(3, "Subject must be at least 3 characters.")
+    .max(200, "Subject must be under 200 characters."),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Message must be at least 10 characters.")
+    .max(5000, "Message must be under 5,000 characters."),
 });
 
 export type ContactFormState = {
@@ -26,71 +35,65 @@ export type ContactFormState = {
 };
 
 export async function submitContactForm(
-  prevState: ContactFormState,
+  _prevState: ContactFormState,
   formData: FormData
-) {
-  const validatedFields = contactFormSchema.safeParse({
-    name: formData.get("name"),
-    email: formData.get("email"),
-    subject: formData.get("subject"),
-    message: formData.get("message"),
-  });
+): Promise<ContactFormState> {
+  const rawData = {
+    name: typeof formData.get("name") === "string" ? (formData.get("name") as string).trim() : "",
+    email: typeof formData.get("email") === "string" ? (formData.get("email") as string).trim() : "",
+    subject: typeof formData.get("subject") === "string" ? (formData.get("subject") as string).trim() : "",
+    message: typeof formData.get("message") === "string" ? (formData.get("message") as string).trim() : "",
+  };
+
+  const validatedFields = contactFormSchema.safeParse(rawData);
 
   if (!validatedFields.success) {
     return {
-      message: "Failed to send message. Please check the fields.",
+      message: "Please correct the errors in the form fields.",
       errors: validatedFields.error.flatten().fieldErrors,
       success: false,
     };
   }
 
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzv-n4TAqtkObrpFqcU4wtmfKWpcmwQ2XwokUKL4YKoJ6SoUXd1f_qbp6gjETezpzOb/exec';
+  const GOOGLE_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbzv-n4TAqtkObrpFqcU4wtmfKWpcmwQ2XwokUKL4YKoJ6SoUXd1f_qbp6gjETezpzOb/exec";
   const { name, email, subject, message } = validatedFields.data;
 
   try {
-    // Construct URLSearchParams for x-www-form-urlencoded data
-    // Google Apps Script usually handles this well
     const params = new URLSearchParams();
-    params.append('name', name);
-    params.append('email', email);
-    params.append('subject', subject);
-    params.append('message', message);
-    params.append('timestamp', new Date().toISOString());
+    params.append("name", name);
+    params.append("email", email);
+    params.append("subject", subject);
+    params.append("message", message);
+    params.append("timestamp", new Date().toISOString());
 
     const response = await fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body: params.toString(),
-      cache: 'no-store'
+      cache: "no-store",
     });
-
-    // Google Apps Script redirects to a JSON response usually, or returns JSON.
-    // We can assume success if we get a 200/302 from the fetch calls that follow redirects.
-
-    // Note: If the script returns a 302 redirect, Next.js fetch on server might follow it or return it.
-    // Usually with 'follow: follow' (default), it resolves to the final page.
-
-    // For specific error handling we might parse the text, but for now let's assume if it doesn't throw it worked.
-    // Or we can check response.ok
 
     if (!response.ok) {
       throw new Error(`Google Script returned ${response.status}: ${response.statusText}`);
     }
-
-    // revalidatePath("/contact");
 
     return {
       message: "Success! Your message has been sent to our team.",
       success: true,
       errors: {},
     };
-
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to submit to Google Sheets:", error);
+    const isNetwork =
+      error instanceof Error &&
+      (error.message.includes("fetch") || error.message.includes("Network"));
     return {
-      message: "Sorry, something went wrong. Please try again later.",
+      message: isNetwork
+        ? "Network error: Unable to deliver message. Please check your internet connection and try again."
+        : "Sorry, something went wrong sending your message. Please reach out to svtc2005@gmail.com directly.",
       success: false,
       errors: {},
     };

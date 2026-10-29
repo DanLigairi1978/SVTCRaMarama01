@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { doc, collection, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { uploadStaffPhoto } from "@/lib/storage-images";
+import { uploadStaffPhoto, deleteStaffPhoto, validatePhotoFile } from "@/lib/storage-images";
+import { formatErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, ImagePlus } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, ImagePlus, AlertCircle } from "lucide-react";
 import Image from "next/image";
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export interface StaffFormInitialData {
   id: string;
@@ -37,34 +37,67 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
   const [bio, setBio] = useState(initialData?.bio ?? "");
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(initialData?.photoUrl ?? null);
+  const [objectUrlCreated, setObjectUrlCreated] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Clean up object URLs to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (objectUrlCreated) {
+        URL.revokeObjectURL(objectUrlCreated);
+      }
+    };
+  }, [objectUrlCreated]);
 
   const handleFileChange = (fileList: FileList | null) => {
     const file = fileList?.[0] ?? null;
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      setError("Portrait must be an image file.");
-      return;
-    }
-    if (file.size > MAX_FILE_SIZE) {
-      setError("Portrait must be under 5MB.");
+    const check = validatePhotoFile(file);
+    if (!check.valid) {
+      setError(check.error || "Invalid image file.");
       return;
     }
 
+    if (objectUrlCreated) {
+      URL.revokeObjectURL(objectUrlCreated);
+    }
+
+    const preview = URL.createObjectURL(file);
+    setObjectUrlCreated(preview);
     setError(null);
     setPhotoFile(file);
-    setPhotoPreview(URL.createObjectURL(file));
+    setPhotoPreview(preview);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (!fullName || !jobDescription || !yearJoined || !bio) return;
+    const trimmedName = fullName.trim();
+    const trimmedJob = jobDescription.trim();
+    const trimmedYear = yearJoined.trim();
+    const trimmedBio = bio.trim();
+
+    if (!trimmedName) {
+      setError("Please enter the staff member's full name.");
+      return;
+    }
+    if (!trimmedJob) {
+      setError("Please enter the staff member's job description / role.");
+      return;
+    }
+    if (!trimmedYear) {
+      setError("Please enter the year joined (e.g. 2016).");
+      return;
+    }
+    if (!trimmedBio) {
+      setError("Please enter a short bio describing their background and role.");
+      return;
+    }
     if (!isEditing && !photoFile) {
-      setError("A portrait photo is required.");
+      setError("A portrait photo is required for a new staff member.");
       return;
     }
 
@@ -74,28 +107,33 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
 
       let photoUrl = initialData?.photoUrl ?? "";
       let photoPath = initialData?.photoPath ?? "";
+
       if (photoFile) {
         const uploaded = await uploadStaffPhoto(photoFile, staffId);
+        // If updating with a new photo, clean up the old photo from storage
+        if (isEditing && initialData?.photoPath && initialData.photoPath !== uploaded.path) {
+          await deleteStaffPhoto(initialData.photoPath);
+        }
         photoUrl = uploaded.url;
         photoPath = uploaded.path;
       }
 
       if (isEditing) {
         await updateDoc(doc(db, "staff", staffId), {
-          fullName,
-          jobDescription,
-          yearJoined,
-          bio,
+          fullName: trimmedName,
+          jobDescription: trimmedJob,
+          yearJoined: trimmedYear,
+          bio: trimmedBio,
           photoUrl,
           photoPath,
           updatedAt: serverTimestamp(),
         });
       } else {
         await setDoc(doc(db, "staff", staffId), {
-          fullName,
-          jobDescription,
-          yearJoined,
-          bio,
+          fullName: trimmedName,
+          jobDescription: trimmedJob,
+          yearJoined: trimmedYear,
+          bio: trimmedBio,
           photoUrl,
           photoPath,
           createdAt: serverTimestamp(),
@@ -104,9 +142,9 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
       }
 
       onSaved();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error saving staff member:", err);
-      setError(err?.message || "Failed to save staff member. Please check details and try again.");
+      setError(formatErrorMessage(err, "Failed to save staff member. Please check details and try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -158,11 +196,11 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label className="font-label text-sm font-medium">Portrait Photo</label>
+            <label className="font-label text-sm font-medium">Portrait Photo (under 5MB)</label>
             <label className="relative aspect-square w-40 rounded-md border border-dashed border-input bg-secondary/40 flex items-center justify-center cursor-pointer overflow-hidden hover:border-primary transition-colors">
               <input
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
                 className="sr-only"
                 onChange={(e) => handleFileChange(e.target.files)}
               />
@@ -171,13 +209,19 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
               ) : (
                 <div className="flex flex-col items-center gap-1 text-muted-foreground">
                   <ImagePlus className="h-6 w-6" />
-                  <span className="font-label text-[0.65rem] uppercase tracking-wide">Portrait</span>
+                  <span className="font-label text-[0.65rem] uppercase tracking-wide">Upload Photo</span>
                 </div>
               )}
             </label>
+            <p className="font-body text-xs text-muted-foreground">Formats: JPEG, PNG, WebP, GIF (max 5MB).</p>
           </div>
 
-          {error && <p className="font-body text-sm text-destructive">{error}</p>}
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
           <div className="flex gap-3 pt-2">
             <Button type="submit" disabled={isSubmitting} className="flex-1">

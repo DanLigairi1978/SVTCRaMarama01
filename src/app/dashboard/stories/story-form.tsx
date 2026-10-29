@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { doc, collection, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { uploadStoryPhoto } from "@/lib/storage-images";
+import { uploadStoryPhoto, deleteStoryPhoto, validatePhotoFile } from "@/lib/storage-images";
+import { formatErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, ImagePlus } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, ImagePlus, AlertCircle } from "lucide-react";
 import Image from "next/image";
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export interface StoryFormInitialData {
   id: string;
@@ -31,6 +31,7 @@ interface StoryFormProps {
 interface PhotoSlot {
   file: File | null;
   previewUrl: string | null;
+  objectUrl: string | null;
 }
 
 export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
@@ -39,28 +40,43 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
   const [heading, setHeading] = useState(initialData?.heading ?? "");
   const [body, setBody] = useState(initialData?.body ?? "");
   const [slots, setSlots] = useState<PhotoSlot[]>(
-    [0, 1, 2].map((i) => ({ file: null, previewUrl: initialData?.photoUrls[i] ?? null }))
+    [0, 1, 2].map((i) => ({
+      file: null,
+      previewUrl: initialData?.photoUrls[i] ?? null,
+      objectUrl: null,
+    }))
   );
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Clean up object URLs on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      slots.forEach((s) => {
+        if (s.objectUrl) URL.revokeObjectURL(s.objectUrl);
+      });
+    };
+  }, [slots]);
 
   const handleFileChange = (slot: number, fileList: FileList | null) => {
     const file = fileList?.[0] ?? null;
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      setError(`Photo ${slot + 1} must be an image file.`);
-      return;
-    }
-    if (file.size > MAX_FILE_SIZE) {
-      setError(`Photo ${slot + 1} must be under 5MB.`);
+    const check = validatePhotoFile(file);
+    if (!check.valid) {
+      setError(`Photo ${slot + 1}: ${check.error}`);
       return;
     }
 
     setError(null);
     setSlots((prev) => {
       const next = [...prev];
-      next[slot] = { file, previewUrl: URL.createObjectURL(file) };
+      const prevSlot = next[slot];
+      if (prevSlot.objectUrl) {
+        URL.revokeObjectURL(prevSlot.objectUrl);
+      }
+      const newObjectUrl = URL.createObjectURL(file);
+      next[slot] = { file, previewUrl: newObjectUrl, objectUrl: newObjectUrl };
       return next;
     });
   };
@@ -69,9 +85,30 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
     e.preventDefault();
     setError(null);
 
-    if (!authorName || !heading || !body) return;
+    const trimmedAuthor = authorName.trim();
+    const trimmedHeading = heading.trim();
+    const trimmedBody = body.trim();
+
+    if (!trimmedAuthor) {
+      setError("Please enter the author's full name.");
+      return;
+    }
+    if (!trimmedHeading) {
+      setError("Please enter the story heading.");
+      return;
+    }
+    if (!trimmedBody) {
+      setError("Please write the story content.");
+      return;
+    }
+
     if (!isEditing && slots.some((s) => !s.file)) {
       setError("All 3 photos are required for a new story.");
+      return;
+    }
+
+    if (isEditing && slots.some((s, i) => !s.file && !initialData?.photoUrls[i])) {
+      setError("All 3 photo slots must have an image.");
       return;
     }
 
@@ -81,32 +118,37 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
 
       const photoUrls: string[] = [];
       const photoPaths: string[] = [];
+
       for (let i = 0; i < 3; i++) {
         const slot = slots[i];
         if (slot.file) {
           const uploaded = await uploadStoryPhoto(slot.file, storyId, i);
+          // If updating with a new photo, clean up the old photo from storage
+          if (isEditing && initialData?.photoPaths[i] && initialData.photoPaths[i] !== uploaded.path) {
+            await deleteStoryPhoto(initialData.photoPaths[i]);
+          }
           photoUrls.push(uploaded.url);
           photoPaths.push(uploaded.path);
         } else if (initialData?.photoUrls[i]) {
           photoUrls.push(initialData.photoUrls[i]);
-          photoPaths.push(initialData.photoPaths[i]);
+          photoPaths.push(initialData.photoPaths[i] || "");
         }
       }
 
       if (isEditing) {
         await updateDoc(doc(db, "stories", storyId), {
-          authorName,
-          heading,
-          body,
+          authorName: trimmedAuthor,
+          heading: trimmedHeading,
+          body: trimmedBody,
           photoUrls,
           photoPaths,
           updatedAt: serverTimestamp(),
         });
       } else {
         await setDoc(doc(db, "stories", storyId), {
-          authorName,
-          heading,
-          body,
+          authorName: trimmedAuthor,
+          heading: trimmedHeading,
+          body: trimmedBody,
           photoUrls,
           photoPaths,
           createdAt: serverTimestamp(),
@@ -115,9 +157,9 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
       }
 
       onSaved();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error saving story:", err);
-      setError(err?.message || "Failed to save story. Please check details and try again.");
+      setError(formatErrorMessage(err, "Failed to save story. Please check details and try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -149,7 +191,7 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
             />
           </div>
           <div className="space-y-2">
-            <label className="font-label text-sm font-medium">Story</label>
+            <label className="font-label text-sm font-medium">Story Body</label>
             <Textarea
               placeholder="Write the story here. Leave a blank line between paragraphs."
               value={body}
@@ -160,7 +202,7 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label className="font-label text-sm font-medium">Photos (3 required)</label>
+            <label className="font-label text-sm font-medium">Photos (3 required, under 5MB each)</label>
             <div className="grid grid-cols-3 gap-3">
               {slots.map((slot, i) => (
                 <label
@@ -169,7 +211,7 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
                 >
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
                     className="sr-only"
                     onChange={(e) => handleFileChange(i, e.target.files)}
                   />
@@ -184,9 +226,15 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
                 </label>
               ))}
             </div>
+            <p className="font-body text-xs text-muted-foreground">Formats: JPEG, PNG, WebP, GIF (max 5MB each).</p>
           </div>
 
-          {error && <p className="font-body text-sm text-destructive">{error}</p>}
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
           <div className="flex gap-3 pt-2">
             <Button type="submit" disabled={isSubmitting} className="flex-1">
