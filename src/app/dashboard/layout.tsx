@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 const dashboardNav = [
   { href: "/dashboard", label: "News" },
   { href: "/dashboard/stories", label: "Stories" },
+  { href: "/dashboard/staff", label: "Staff" },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

@@ -2,6 +2,8 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PageHeader } from '@/components/layout/page-header';
 import { SectionEyebrow } from '@/components/marketing/section-eyebrow';
+import { LeadershipSection } from '@/components/marketing/leadership-section';
+import { HistoryImageSwap } from '@/components/marketing/history-image-swap';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Landmark, Scale, Target, Handshake } from 'lucide-react';
 
@@ -51,18 +53,7 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          <div className="relative h-80 rounded-md overflow-hidden shadow-elevated">
-            {historyImage && (
-              <Image
-                src={historyImage.imageUrl}
-                alt={historyImage.description}
-                fill
-                className="object-cover"
-                data-ai-hint={historyImage.imageHint}
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            )}
-          </div>
+          <HistoryImageSwap alt={historyImage?.description ?? 'Historic photograph of SVTC'} />
         </section>
 
         <section id="purpose" className="grid md:grid-cols-2 gap-8">
@@ -108,6 +99,8 @@ export default function AboutPage() {
             </CardContent>
           </Card>
         </section>
+
+        <LeadershipSection />
 
         <section id="great-hall" className="bg-secondary/50 rounded-md p-8 md:p-12">
           <div className="grid md:grid-cols-2 gap-12 items-center">

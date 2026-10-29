@@ -70,6 +70,71 @@ export async function uploadStoryPhoto(file: File, storyId: string, slot: number
   return { path, url: `https://cdn.jsdelivr.net/gh/${REPO}@${BRANCH}/${path}` };
 }
 
+/** Uploads a staff portrait to the svtcblogimages repo and returns its repo path + public jsDelivr URL. */
+export async function uploadStaffPhoto(file: File, staffId: string): Promise<UploadedPhoto> {
+  const token = getToken();
+  const ext = extensionFor(file);
+  const path = `staff/${staffId}/portrait-${Date.now()}.${ext}`;
+  const content = await fileToBase64(file);
+
+  const res = await fetch(`${GITHUB_API}/repos/${REPO}/contents/${path}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+    body: JSON.stringify({
+      message: `Add portrait for staff ${staffId}`,
+      content,
+      branch: BRANCH,
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`GitHub upload failed (${res.status}): ${body}`);
+  }
+
+  return { path, url: `https://cdn.jsdelivr.net/gh/${REPO}@${BRANCH}/${path}` };
+}
+
+/** Best-effort delete — swallows errors so a cleanup failure never blocks removing the Firestore doc. */
+async function deleteRepoFile(path: string): Promise<void> {
+  try {
+    const token = getToken();
+    const getRes = await fetch(`${GITHUB_API}/repos/${REPO}/contents/${path}?ref=${BRANCH}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    });
+    if (!getRes.ok) return;
+    const { sha } = await getRes.json();
+
+    await fetch(`${GITHUB_API}/repos/${REPO}/contents/${path}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+      body: JSON.stringify({
+        message: `Remove photo ${path}`,
+        sha,
+        branch: BRANCH,
+      }),
+    });
+  } catch (error) {
+    console.warn("Best-effort delete of GitHub image failed:", path, error);
+  }
+}
+
+export async function deleteStaffPhoto(path: string): Promise<void> {
+  return deleteRepoFile(path);
+}
+
 /** Best-effort delete — swallows errors so a cleanup failure never blocks removing the Firestore doc. */
 export async function deleteStoryPhoto(path: string): Promise<void> {
   try {

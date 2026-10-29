@@ -57,3 +57,15 @@ export type Story = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type Staff = {
+  id: string;
+  fullName: string;
+  jobDescription: string;
+  yearJoined: string;
+  bio: string;
+  photoUrl: string;
+  photoPath: string;
+  createdAt: Date;
+  order?: number;
+};
