@@ -115,9 +115,9 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
       }
 
       onSaved();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error saving story:", err);
-      setError("Failed to save story. Check your permissions and try again.");
+      setError(err?.message || "Failed to save story. Please check details and try again.");
     } finally {
       setIsSubmitting(false);
     }

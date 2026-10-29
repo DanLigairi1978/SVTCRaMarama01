@@ -104,9 +104,9 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
       }
 
       onSaved();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error saving staff member:", err);
-      setError("Failed to save staff member. Check your permissions and try again.");
+      setError(err?.message || "Failed to save staff member. Please check details and try again.");
     } finally {
       setIsSubmitting(false);
     }
