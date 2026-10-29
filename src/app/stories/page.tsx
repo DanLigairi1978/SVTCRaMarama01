@@ -5,7 +5,7 @@ import Image from "next/image";
 import { collection, getDocs, query, orderBy, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { format } from "date-fns";
-import { Loader2, BookOpen } from "lucide-react";
+import { Loader2, BookOpen, Image as ImageIcon } from "lucide-react";
 import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import { Button } from "@/components/ui/button";
 import { formatErrorMessage } from "@/lib/error-utils";
@@ -18,6 +18,28 @@ interface StoryDoc {
   photoUrls: string[];
   photoPaths?: string[];
   createdAt?: Timestamp;
+}
+
+function StoryPhoto({ src, alt, sizes }: { src: string; alt: string; sizes: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-secondary/60 text-muted-foreground">
+        <ImageIcon className="h-8 w-8 opacity-40" />
+      </div>
+    );
+  }
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      className="object-cover"
+      sizes={sizes}
+      unoptimized
+      onError={() => setFailed(true)}
+    />
+  );
 }
 
 export default function StoriesPage() {
@@ -99,28 +121,46 @@ export default function StoriesPage() {
                 {story.heading}
               </h2>
 
-              {story.photoUrls.length > 0 && (
+              {story.photoUrls.length === 1 && (
+                <div className="relative aspect-[16/10] sm:aspect-[2/1] rounded-md overflow-hidden bg-muted mb-8">
+                  <StoryPhoto
+                    src={story.photoUrls[0]}
+                    alt={story.heading}
+                    sizes="(max-width: 768px) 100vw, 768px"
+                  />
+                </div>
+              )}
+
+              {story.photoUrls.length === 2 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                  {story.photoUrls.slice(0, 2).map((url, i) => (
+                    <div key={i} className="relative aspect-[4/3] rounded-md overflow-hidden bg-muted">
+                      <StoryPhoto
+                        src={url}
+                        alt={`${story.heading} photo ${i + 1}`}
+                        sizes="(max-width: 640px) 100vw, 50vw"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {story.photoUrls.length >= 3 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                   <div className="relative aspect-[4/5] rounded-md overflow-hidden bg-muted">
-                    <Image
+                    <StoryPhoto
                       src={story.photoUrls[0]}
                       alt={story.heading}
-                      fill
-                      className="object-cover"
                       sizes="(max-width: 640px) 100vw, 50vw"
-                      unoptimized
                     />
                   </div>
                   <div className="grid grid-rows-2 gap-3">
                     {story.photoUrls.slice(1, 3).map((url, i) => (
                       <div key={i} className="relative aspect-square rounded-md overflow-hidden bg-muted">
-                        <Image
+                        <StoryPhoto
                           src={url}
                           alt={`${story.heading} photo ${i + 2}`}
-                          fill
-                          className="object-cover"
                           sizes="(max-width: 640px) 100vw, 25vw"
-                          unoptimized
                         />
                       </div>
                     ))}

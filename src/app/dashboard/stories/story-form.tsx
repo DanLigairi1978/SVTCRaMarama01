@@ -58,13 +58,14 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
     };
   }, [slots]);
 
-  const handleFileChange = (slot: number, fileList: FileList | null) => {
-    const file = fileList?.[0] ?? null;
+  const handleFileChange = (slot: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
     if (!file) return;
 
     const check = validatePhotoFile(file);
     if (!check.valid) {
       setError(`Photo ${slot + 1}: ${check.error}`);
+      e.target.value = "";
       return;
     }
 
@@ -93,12 +94,28 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
       setError("Please enter the author's full name.");
       return;
     }
+    if (trimmedAuthor.length > 100) {
+      setError("Author name must be 100 characters or fewer.");
+      return;
+    }
     if (!trimmedHeading) {
       setError("Please enter the story heading.");
       return;
     }
+    if (trimmedHeading.length > 200) {
+      setError("Story heading must be 200 characters or fewer.");
+      return;
+    }
     if (!trimmedBody) {
       setError("Please write the story content.");
+      return;
+    }
+    if (trimmedBody.length < 20) {
+      setError("Story body must be at least 20 characters.");
+      return;
+    }
+    if (trimmedBody.length > 20000) {
+      setError("Story body must be 20,000 characters or fewer.");
       return;
     }
 
@@ -113,19 +130,21 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
     }
 
     setIsSubmitting(true);
+    const newlyUploadedPaths: string[] = [];
     try {
       const storyId = initialData?.id ?? doc(collection(db, "stories")).id;
 
       const photoUrls: string[] = [];
       const photoPaths: string[] = [];
+      const oldPathsToDelete: string[] = [];
 
       for (let i = 0; i < 3; i++) {
         const slot = slots[i];
         if (slot.file) {
           const uploaded = await uploadStoryPhoto(slot.file, storyId, i);
-          // If updating with a new photo, clean up the old photo from storage
+          newlyUploadedPaths.push(uploaded.path);
           if (isEditing && initialData?.photoPaths[i] && initialData.photoPaths[i] !== uploaded.path) {
-            await deleteStoryPhoto(initialData.photoPaths[i]);
+            oldPathsToDelete.push(initialData.photoPaths[i]);
           }
           photoUrls.push(uploaded.url);
           photoPaths.push(uploaded.path);
@@ -156,9 +175,18 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
         });
       }
 
+      // ONLY delete replaced old photos AFTER Firestore write succeeds
+      if (oldPathsToDelete.length > 0) {
+        await Promise.all(oldPathsToDelete.map((p) => deleteStoryPhoto(p)));
+      }
+
       onSaved();
     } catch (err: unknown) {
       console.error("Error saving story:", err);
+      // Clean up newly uploaded photos if Firestore write fails to prevent orphaned storage files
+      if (newlyUploadedPaths.length > 0) {
+        await Promise.all(newlyUploadedPaths.map((p) => deleteStoryPhoto(p)));
+      }
       setError(formatErrorMessage(err, "Failed to save story. Please check details and try again."));
     } finally {
       setIsSubmitting(false);
@@ -213,7 +241,7 @@ export function StoryForm({ initialData, onSaved, onCancel }: StoryFormProps) {
                     type="file"
                     accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
                     className="sr-only"
-                    onChange={(e) => handleFileChange(i, e.target.files)}
+                    onChange={(e) => handleFileChange(i, e)}
                   />
                   {slot.previewUrl ? (
                     <Image src={slot.previewUrl} alt={`Photo ${i + 1} preview`} fill className="object-cover" unoptimized />

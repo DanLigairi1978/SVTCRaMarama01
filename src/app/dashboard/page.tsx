@@ -79,12 +79,24 @@ export default function DashboardPage() {
             setFormError("Please enter a news headline/title.");
             return;
         }
+        if (trimmedTitle.length > 200) {
+            setFormError("Title must be 200 characters or fewer.");
+            return;
+        }
         if (!trimmedDate) {
             setFormError("Please enter the date display text (e.g. 25 JUL 2024).");
             return;
         }
+        if (trimmedDate.length > 50) {
+            setFormError("Date display text must be 50 characters or fewer.");
+            return;
+        }
         if (!trimmedSummary) {
             setFormError("Please enter a summary of the news event.");
+            return;
+        }
+        if (trimmedSummary.length > 2000) {
+            setFormError("Summary must be 2,000 characters or fewer.");
             return;
         }
 

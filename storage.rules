@@ -17,8 +17,21 @@ service firebase.storage {
         ];
     }
 
+    // Public read for all stored assets
     match /{allPaths=**} {
       allow read: if true;
+    }
+
+    // Dedicated upload and delete paths for staff portraits
+    match /staff/{staffId}/{fileName} {
+      allow delete: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Dedicated upload and delete paths for story photos
+    match /stories/{storyId}/{fileName} {
       allow delete: if isAdmin();
       allow create, update: if isAdmin()
         && request.resource.size < 10 * 1024 * 1024

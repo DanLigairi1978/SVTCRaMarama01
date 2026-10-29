@@ -100,6 +100,33 @@ describe("validatePhotoFile", () => {
     assert.match(res.error || "", /Unsupported file type/i);
   });
 
+  test("rejects SVG and unsafe image MIME types", () => {
+    const svgFile = new File(["<svg></svg>"], "vector.svg", { type: "image/svg+xml" });
+    const resSvg = validatePhotoFile(svgFile);
+    assert.equal(resSvg.valid, false);
+    assert.match(resSvg.error || "", /Unsupported file type/i);
+
+    const bmpFile = new File(["bmp"], "image.bmp", { type: "image/bmp" });
+    const resBmp = validatePhotoFile(bmpFile);
+    assert.equal(resBmp.valid, false);
+    assert.match(resBmp.error || "", /Unsupported file type/i);
+  });
+
+  test("handles empty file.type with extension fallback", () => {
+    const validJpg = new File(["dummy"], "photo.jpg", { type: "" });
+    const res = validatePhotoFile(validJpg);
+    assert.equal(res.valid, true);
+
+    const validPng = new File(["dummy"], "portrait.png", { type: "" });
+    const resPng = validatePhotoFile(validPng);
+    assert.equal(resPng.valid, true);
+
+    const invalidExe = new File(["binary"], "program.exe", { type: "" });
+    const resExe = validatePhotoFile(invalidExe);
+    assert.equal(resExe.valid, false);
+    assert.match(resExe.error || "", /Unsupported file type/i);
+  });
+
   test("accepts valid image formats (JPEG, PNG, WebP, GIF, AVIF)", () => {
     const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
     for (const mime of validTypes) {
@@ -184,5 +211,25 @@ describe("Contact Form Validation Schema", () => {
       message: "We would love to discuss a partnership with SVTC.",
     });
     assert.equal(res.success, true);
+  });
+});
+
+describe("Staff and News Input Boundaries", () => {
+  function validateStaffYear(yearStr: string): boolean {
+    const trimmed = yearStr.trim();
+    const currentYear = new Date().getFullYear();
+    const num = Number(trimmed);
+    return /^\d{4}$/.test(trimmed) && num >= 1950 && num <= currentYear + 1;
+  }
+
+  test("validates 4-digit year format and bounds", () => {
+    assert.equal(validateStaffYear("2016"), true);
+    assert.equal(validateStaffYear(" 2024 "), true);
+    assert.equal(validateStaffYear("1950"), true);
+    assert.equal(validateStaffYear("1899"), false);
+    assert.equal(validateStaffYear("3000"), false);
+    assert.equal(validateStaffYear("abcd"), false);
+    assert.equal(validateStaffYear("20"), false);
+    assert.equal(validateStaffYear(""), false);
   });
 });

@@ -82,7 +82,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const provider = new GoogleAuthProvider();
             // Force account selection if needed
             provider.setCustomParameters({ prompt: "select_account" });
-            await signInWithPopup(auth, provider);
+            const result = await signInWithPopup(auth, provider);
+            if (result.user && result.user.email) {
+                const normalized = result.user.email.toLowerCase().trim();
+                if (!ADMIN_EMAILS.includes(normalized)) {
+                    setAuthError(
+                        `Signed in as ${result.user.email}. This account is not an authorized administrator. Please sign in with an approved SVTC admin account.`
+                    );
+                }
+            }
         } catch (error: any) {
             console.error("Error signing in with Google:", error);
             // User closing popup is intentional cancel, don't flag as failure

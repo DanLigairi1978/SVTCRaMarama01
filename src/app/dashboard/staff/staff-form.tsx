@@ -50,13 +50,14 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
     };
   }, [objectUrlCreated]);
 
-  const handleFileChange = (fileList: FileList | null) => {
-    const file = fileList?.[0] ?? null;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
     if (!file) return;
 
     const check = validatePhotoFile(file);
     if (!check.valid) {
       setError(check.error || "Invalid image file.");
+      e.target.value = "";
       return;
     }
 
@@ -84,16 +85,34 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
       setError("Please enter the staff member's full name.");
       return;
     }
+    if (trimmedName.length > 100) {
+      setError("Full name must be 100 characters or fewer.");
+      return;
+    }
     if (!trimmedJob) {
       setError("Please enter the staff member's job description / role.");
+      return;
+    }
+    if (trimmedJob.length > 150) {
+      setError("Job description must be 150 characters or fewer.");
       return;
     }
     if (!trimmedYear) {
       setError("Please enter the year joined (e.g. 2016).");
       return;
     }
+    const currentYear = new Date().getFullYear();
+    const numericYear = Number(trimmedYear);
+    if (!/^\d{4}$/.test(trimmedYear) || numericYear < 1950 || numericYear > currentYear + 1) {
+      setError(`Please enter a valid 4-digit year between 1950 and ${currentYear + 1}.`);
+      return;
+    }
     if (!trimmedBio) {
       setError("Please enter a short bio describing their background and role.");
+      return;
+    }
+    if (trimmedBio.length > 5000) {
+      setError("Bio must be 5,000 characters or fewer.");
       return;
     }
     if (!isEditing && !photoFile) {
@@ -102,6 +121,7 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
     }
 
     setIsSubmitting(true);
+    let newlyUploadedPath: string | null = null;
     try {
       const staffId = initialData?.id ?? doc(collection(db, "staff")).id;
 
@@ -110,10 +130,7 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
 
       if (photoFile) {
         const uploaded = await uploadStaffPhoto(photoFile, staffId);
-        // If updating with a new photo, clean up the old photo from storage
-        if (isEditing && initialData?.photoPath && initialData.photoPath !== uploaded.path) {
-          await deleteStaffPhoto(initialData.photoPath);
-        }
+        newlyUploadedPath = uploaded.path;
         photoUrl = uploaded.url;
         photoPath = uploaded.path;
       }
@@ -141,9 +158,18 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
         });
       }
 
+      // ONLY delete replaced old photo AFTER Firestore write succeeds
+      if (isEditing && photoFile && initialData?.photoPath && initialData.photoPath !== photoPath) {
+        await deleteStaffPhoto(initialData.photoPath);
+      }
+
       onSaved();
     } catch (err: unknown) {
       console.error("Error saving staff member:", err);
+      // Clean up newly uploaded photo if Firestore write fails to prevent orphaned files
+      if (newlyUploadedPath) {
+        await deleteStaffPhoto(newlyUploadedPath);
+      }
       setError(formatErrorMessage(err, "Failed to save staff member. Please check details and try again."));
     } finally {
       setIsSubmitting(false);
@@ -202,7 +228,7 @@ export function StaffForm({ initialData, onSaved, onCancel }: StaffFormProps) {
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
                 className="sr-only"
-                onChange={(e) => handleFileChange(e.target.files)}
+                onChange={handleFileChange}
               />
               {photoPreview ? (
                 <Image src={photoPreview} alt="Portrait preview" fill className="object-cover" unoptimized />

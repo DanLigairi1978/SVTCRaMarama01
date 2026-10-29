@@ -18,7 +18,7 @@ import { formatErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Trash2, Pencil, Plus, ArrowUp, ArrowDown, GripVertical, Save, AlertCircle, RotateCw } from "lucide-react";
+import { Loader2, Trash2, Pencil, Plus, ArrowUp, ArrowDown, GripVertical, Save, AlertCircle, CheckCircle2, RotateCw } from "lucide-react";
 import { StaffForm, type StaffFormInitialData } from "./staff-form";
 
 interface StaffListItem {
@@ -42,6 +42,7 @@ export default function StaffAdminPage() {
   const [editing, setEditing] = useState<StaffFormInitialData | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchStaff = async () => {
@@ -94,10 +95,14 @@ export default function StaffAdminPage() {
   const handleDelete = async (id: string, photoPath: string) => {
     if (!confirm("Are you sure you want to delete this staff member? This cannot be undone.")) return;
     setActionError(null);
+    setSaveSuccess(null);
     setDeletingId(id);
     try {
-      if (photoPath) await deleteStaffPhoto(photoPath);
+      // Delete Firestore document first so failed delete doesn't destroy image
       await deleteDoc(doc(db, "staff", id));
+      if (photoPath) {
+        await deleteStaffPhoto(photoPath);
+      }
       await fetchStaff();
     } catch (error) {
       console.error("Error deleting staff member:", error);
@@ -111,6 +116,7 @@ export default function StaffAdminPage() {
     setView("list");
     setEditing(null);
     setActionError(null);
+    setSaveSuccess(null);
     fetchStaff();
   };
 
@@ -139,6 +145,7 @@ export default function StaffAdminPage() {
   const handleSaveOrder = async () => {
     setSavingOrder(true);
     setActionError(null);
+    setSaveSuccess(null);
     try {
       const batch = writeBatch(db);
       staff.forEach((member, index) => {
@@ -147,6 +154,8 @@ export default function StaffAdminPage() {
       await batch.commit();
       setSavedOrder(staff.map((s) => s.id));
       setStaff((prev) => prev.map((s, i) => ({ ...s, order: i })));
+      setSaveSuccess("Staff display order updated successfully.");
+      setTimeout(() => setSaveSuccess(null), 4000);
     } catch (error) {
       console.error("Error saving order:", error);
       setActionError(formatErrorMessage(error, "Failed to save order. Check your permissions and try again."));
@@ -178,6 +187,13 @@ export default function StaffAdminPage() {
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{actionError}</AlertDescription>
+        </Alert>
+      )}
+
+      {saveSuccess && (
+        <Alert className="border-teal text-teal dark:border-teal">
+          <CheckCircle2 className="h-4 w-4" />
+          <AlertDescription>{saveSuccess}</AlertDescription>
         </Alert>
       )}
 

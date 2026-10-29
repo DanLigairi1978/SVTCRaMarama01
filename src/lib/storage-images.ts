@@ -24,6 +24,15 @@ const MIME_TO_EXT: Record<string, string> = {
   "image/avif": "avif",
 };
 
+const EXT_TO_MIME: Record<string, string> = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
+  gif: "image/gif",
+  avif: "image/avif",
+};
+
 /**
  * Validates file size and MIME type before sending to Firebase Storage.
  */
@@ -43,14 +52,17 @@ export function validatePhotoFile(file: File | null | undefined): { valid: boole
     };
   }
 
-  const mime = file.type.toLowerCase();
-  const isAllowedMime = ALLOWED_IMAGE_TYPES.includes(mime);
-  const isImageMime = mime.startsWith("image/");
+  let mime = (file.type || "").toLowerCase().trim();
+  if (!mime) {
+    // If browser didn't supply MIME type, deduce from file extension
+    const ext = extensionFor(file);
+    mime = EXT_TO_MIME[ext] || "";
+  }
 
-  if (!isAllowedMime && !isImageMime) {
+  if (!ALLOWED_IMAGE_TYPES.includes(mime)) {
     return {
       valid: false,
-      error: "Unsupported file type. Please upload a JPEG, PNG, WebP, or GIF image.",
+      error: "Unsupported file type. Please upload a JPEG, PNG, WebP, GIF, or AVIF image.",
     };
   }
 

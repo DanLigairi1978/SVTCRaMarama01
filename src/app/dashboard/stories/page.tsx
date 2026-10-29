@@ -75,10 +75,11 @@ export default function StoriesAdminPage() {
     setActionError(null);
     setDeletingId(id);
     try {
+      // Delete Firestore document first so failed delete doesn't destroy images
+      await deleteDoc(doc(db, "stories", id));
       if (photoPaths && photoPaths.length > 0) {
         await Promise.all(photoPaths.map((path) => deleteStoryPhoto(path)));
       }
-      await deleteDoc(doc(db, "stories", id));
       await fetchStories();
     } catch (error) {
       console.error("Error deleting story:", error);
